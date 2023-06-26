@@ -59,22 +59,27 @@ io.on('connection', function(socket) {
   });
   socket.on('joinroom', function(username, roomid) {
     console.log(username + ' has joined room ' + roomid);
-    socket.broadcast.emit('update', username + ' has joined the room');
+    socket.join(roomid);
+    socket.to(roomid).emit('update', username + ' has joined the room');
   });
   socket.on('createroom', function(id, name) {
     console.log('room ' + name + ' (' + id + ') created');
     room_list.push({id: id, name: name});
+    socket.broadcast.emit('addroom', id, name);
   })
   socket.on('getroomlist', function() {
     socket.emit('returnroomlist', room_list);
   })
-  socket.on('chat', function(message) {
-    socket.broadcast.emit('chat', message);
+  socket.on('chat', function(message, room_id) {
+    // socket.broadcast.emit('chat', message);
+    socket.to(room_id).emit('chat', message);
   });
   socket.on('disconnect', function() {
-    user = user_list.find(user => user.uid == socket.id);
-    console.log(user.username + ' - ' + user.uid + ' has disconnected');
-    socket.broadcast.emit('update', user.username + ' has left the room');
+    if (user.length != 0) {
+      user = user_list.find(user => user.uid == socket.id);
+      console.log(user.username + ' - ' + user.uid + ' has disconnected');
+      socket.broadcast.emit('update', user.username + ' has left the room');
+    }
   })
 });
 

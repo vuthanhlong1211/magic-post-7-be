@@ -17,14 +17,19 @@ console.log('start');
     }
 
     socket.emit('newuser', username);
-    _username = username;
-    app.querySelector('.join-screen').classList.remove('active');
-    app.querySelector('.room-select-screen').classList.add('active');
     socket.emit('getroomlist');
     socket.on('returnroomlist', function(room_list) {
       _room_list = room_list;
-    })
+      _room_list.forEach(createAllRoom);
+    });
+    _username = username;
+    app.querySelector('.join-screen').classList.remove('active');
+    app.querySelector('.room-select-screen').classList.add('active');
   });
+
+  socket.on('addroom', function(id, name) {
+    createRoom(id, name);
+  })
 
   app.querySelector('.room-select-screen #create-room').addEventListener('click', function() {
     let room_name = app.querySelector('.room-select-screen #room-name').value;
@@ -41,14 +46,6 @@ console.log('start');
     socket.emit('createroom', room_id, room_name);
   });
 
-  app.querySelector('.room-select-screen #room-1').addEventListener('click', function() {
-    let roomid = app.querySelector('.room-select-screen #room-1').value;
-    _roomid = roomid
-    socket.emit('joinroom', _username, roomid);
-    app.querySelector('.room-select-screen').classList.remove('active');
-    app.querySelector('.chat-screen').classList.add('active');
-  })
-
   app.querySelector('.chat-screen #send-message').addEventListener('click', function() {
     let message = app.querySelector('.chat-screen #message-input').value;
 
@@ -61,10 +58,12 @@ console.log('start');
       text: message
     });
 
+    console.log(_roomid);
+
     socket.emit('chat', {
       username: _username,
       text: message
-    });
+    }, _roomid);
 
     app.querySelector('.chat-screen #message-input').value = '';
   });
@@ -92,6 +91,10 @@ console.log('start');
     return text;
   }
 
+  function createAllRoom(value) {
+    createRoom(value.id, value.name);
+  }
+
   function createRoom(id, name) {
     let room_container = app.querySelector('.room-select-screen .room-list');
     let marker = document.createElement('li');
@@ -109,6 +112,7 @@ console.log('start');
     room_container.scrollTop = room_container.scrollHeight - room_container.clientHeight;
     document.getElementById(room_id).addEventListener('click', function() {
       socket.emit('joinroom', _username, id);
+      _roomid = id;
       app.querySelector('.room-select-screen').classList.remove('active');
       app.querySelector('.chat-screen').classList.add('active');
     })
