@@ -38,8 +38,21 @@ class user {
   }
 
 }
-
+/**
+ * user {
+ *  uid,
+ *  username
+ * }
+ */
 user_list = new Array();
+
+/**
+ * room {
+ *  id,
+ *  name,
+ *  password
+ * }
+ */
 room_list = new Array();
 
 // Khởi tạo server
@@ -57,15 +70,31 @@ io.on('connection', function(socket) {
   socket.on('exituser', function(username) {
     socket.broadcast.emit('update', username + 'has left the room');
   });
-  socket.on('joinroom', function(username, roomid) {
+  socket.on('ask_permission_to_join', function(username, roomid, password) {
+    let room = room_list.find(room => room.id == roomid);
+    let permission;
+    if (room == undefined) {
+      permission = undefined;
+    } else if (room.password != password) {
+      permission = false;
+    } else if (room.password == password) {
+      permission = true;
+    }
+    socket.emit('return_permission', permission);
+  });
+  socket.on('joining_room', function(username, roomid) {
     console.log(username + ' has joined room ' + roomid);
     socket.join(roomid);
     socket.to(roomid).emit('update', username + ' has joined the room');
   });
-  socket.on('createroom', function(id, name) {
+  socket.on('req_new_room', function(name, password) {
+    let id;
+    do {
+      id = makeid();
+    } while (room_list.length !=0 && room_list.find(room => room.id == id) != undefined)
+    room_list.push({id: id, name: name, password: password});
     console.log('room ' + name + ' (' + id + ') created');
-    room_list.push({id: id, name: name});
-    socket.broadcast.emit('addroom', id, name);
+    io.emit('addroom', id, name);
   })
   socket.on('getroomlist', function() {
     socket.emit('returnroomlist', room_list);
@@ -75,8 +104,11 @@ io.on('connection', function(socket) {
     socket.to(room_id).emit('chat', message);
   });
   socket.on('disconnect', function() {
-    if (user.length != 0) {
+    if (user != undefined && user.length != 0) {
       user = user_list.find(user => user.uid == socket.id);
+      if (user == undefined) {
+        return;
+      }
       console.log(user.username + ' - ' + user.uid + ' has disconnected');
       socket.broadcast.emit('update', user.username + ' has left the room');
     }
@@ -87,3 +119,13 @@ io.on('connection', function(socket) {
 http.listen(3000, function(){
   console.log('listening on *:3000');
 });
+
+function makeid() {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for( var i=0; i < 5; i++ ) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+}

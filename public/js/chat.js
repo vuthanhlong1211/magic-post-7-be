@@ -6,6 +6,8 @@ console.log('start');
   let _username;
   let _roomid;
 
+  let _participant = new Array();
+
   let _room_list = new Array();
 
   app.querySelector('.join-screen #join-button').addEventListener('click', function() {
@@ -37,13 +39,11 @@ console.log('start');
       alert('Cannot use blank room name!');
       return;
     }
-    let room_id;
-    do {
-      room_id = makeid();
-      console.log('Try room id: ' + room_id);
-    } while (_room_list.length !=0 && _room_list.find(room => room.id == room_id) != undefined);
-    createRoom(room_id, room_name);
-    socket.emit('createroom', room_id, room_name);
+    let room_password = app.querySelector('.room-select-screen #room-password').value;
+    if (!checkPasswordValidity(room_password)) {
+      return;
+    }
+    socket.emit('req_new_room', room_name, room_password);
   });
 
   app.querySelector('.chat-screen #send-message').addEventListener('click', function() {
@@ -81,16 +81,6 @@ console.log('start');
     renderMessage('other', message);
   });
 
-  function makeid() {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for( var i=0; i < 5; i++ ) {
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
-  }
-
   function createAllRoom(value) {
     createRoom(value.id, value.name);
   }
@@ -100,22 +90,45 @@ console.log('start');
     let marker = document.createElement('li');
     let room_label = document.createElement('label');
     let room_id = 'room-' + id;
-    room_label.setAttribute('for', room_id);
     room_label.innerText = 'Room: ' + name;
+    let room_password = document.createElement('input');
+    room_password.setAttribute('type', 'password');
+    room_password.setAttribute('id', 'password-' + room_id);
     let room_button = document.createElement('button');
     room_button.setAttribute('id', room_id);
     room_button.setAttribute('value', id);
     room_button.innerText = 'Join';
+    room_label.appendChild(room_password);
     room_label.appendChild(room_button);
     marker.appendChild(room_label);
     room_container.appendChild(marker);
     room_container.scrollTop = room_container.scrollHeight - room_container.clientHeight;
     document.getElementById(room_id).addEventListener('click', function() {
-      socket.emit('joinroom', _username, id);
-      _roomid = id;
-      app.querySelector('.room-select-screen').classList.remove('active');
-      app.querySelector('.chat-screen').classList.add('active');
+      let password = document.getElementById('password-' + room_id).value;
+      socket.emit('ask_permission_to_join', _username, id, password);
+      socket.on('return_permission', function(permission) {
+        if (permission == undefined) {
+          alert('Error trying to join, no room exists!');
+          return;
+        } else if (permission == false) {
+          alert('Wrong password!');
+          return;
+        } else {
+          _roomid = id;
+          socket.emit('joining_room', _username, _roomid);
+          app.querySelector('.room-select-screen').classList.remove('active');
+          app.querySelector('.chat-screen').classList.add('active');
+        }
+      })
     })
+  }
+
+  function checkPasswordValidity(password) {
+    if (password.length < 8 && password.length > 0) {
+      alert('Valid password must longer than 8 characters');
+      return false;
+    }
+    return true;
   }
 
   function renderMessage(type, message) {
