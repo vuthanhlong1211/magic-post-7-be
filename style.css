@@ -1,0 +1,1755 @@
+.travalizer-desktop,
+.travalizer-desktop * {
+  box-sizing: border-box;
+}
+.travalizer-desktop {
+  background: #355b3e;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.chats {
+  background: var(--iceberg-blue, #8babd8);
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 1280px;
+  height: 720px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: hidden;
+}
+.bg-print {
+  padding: 0px 0px 0px 1428px;
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 1280px;
+  height: 720px;
+  position: relative;
+  overflow: hidden;
+}
+.left-side-bar {
+  background: #ffffff;
+  border-style: solid;
+  border-color: #d9dce0;
+  border-width: 0px 1px 0px 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 364px;
+  height: 720px;
+  position: relative;
+}
+.search-bar {
+  padding: 8px 16px 8px 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 56px;
+  position: relative;
+}
+.menu-icon {
+  border-radius: 100px;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  position: relative;
+}
+.menu-icon2 {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  overflow: visible;
+}
+.search {
+  background: var(--lightgrey, #f5f5f5);
+  border-radius: 22px;
+  padding: 8px 16px 8px 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1;
+  height: 40px;
+  position: relative;
+}
+.search2 {
+  flex-shrink: 0;
+  position: relative;
+  overflow: visible;
+}
+.search3 {
+  color: var(--navy-grey, #707991);
+  text-align: left;
+  font: 400 16px/20px "Inter", sans-serif;
+  position: relative;
+  width: 121px;
+  height: 20px;
+}
+.chats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex: 1;
+  position: relative;
+}
+.chat-list-chatgram-verifed-bot-item {
+  padding: 12px 16px 12px 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 72px;
+  position: relative;
+}
+.avatar {
+  border-radius: 100px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: visible;
+}
+.texts {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+.name {
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.bot-name {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1;
+  position: relative;
+}
+.chatgram {
+  color: var(--rich-black, #011627);
+  text-align: left;
+  font: var(--_16-semi-bold, 600 16px/20px "Inter", sans-serif);
+  position: relative;
+}
+.verified-bot {
+  flex-shrink: 0;
+  position: relative;
+  overflow: visible;
+}
+._19-48 {
+  color: var(--navy-grey, #707991);
+  text-align: left;
+  font: var(--_12-reg, 400 12px/16px "Inter", sans-serif);
+  position: relative;
+}
+.message {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.chatgram-web-was-updated {
+  color: var(--navy-grey, #707991);
+  text-align: left;
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+  position: relative;
+}
+.new-message {
+  background: var(--light-green, #78e378);
+  border-radius: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  position: relative;
+}
+._1 {
+  color: #ffffff;
+  text-align: center;
+  font: var(--_12-reg, 400 12px/16px "Inter", sans-serif);
+  position: relative;
+  width: 16px;
+  height: 16px;
+}
+.chat-list-item-with-new-icon {
+  padding: 12px 16px 12px 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 72px;
+  position: relative;
+}
+.avatar2 {
+  border-radius: 100px;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  position: relative;
+}
+.jessica-drew {
+  color: var(--rich-black, #011627);
+  text-align: left;
+  font: var(--_16-semi-bold, 600 16px/20px "Inter", sans-serif);
+  position: relative;
+  flex: 1;
+}
+._18-30 {
+  color: var(--navy-grey, #707991);
+  text-align: left;
+  font: var(--_12-reg, 400 12px/16px "Inter", sans-serif);
+  position: relative;
+}
+.ok-see-you-later {
+  color: var(--navy-grey, #707991);
+  text-align: left;
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+  position: relative;
+}
+._2 {
+  color: #ffffff;
+  text-align: center;
+  font: var(--_12-reg, 400 12px/16px "Inter", sans-serif);
+  position: relative;
+  width: 16px;
+  height: 16px;
+}
+.chat-list-item {
+  padding: 12px 16px 12px 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 72px;
+  position: relative;
+}
+.david-moore {
+  color: var(--rich-black, #011627);
+  text-align: left;
+  font: var(--_16-semi-bold, 600 16px/20px "Inter", sans-serif);
+  position: relative;
+  flex: 1;
+}
+._18-16 {
+  color: var(--navy-grey, #707991);
+  text-align: left;
+  font: var(--_12-reg, 400 12px/16px "Inter", sans-serif);
+  position: relative;
+}
+.message2 {
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.you-i-don-t-remember-anything {
+  color: var(--navy-grey, #707991);
+  text-align: left;
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+  position: relative;
+}
+.chat-list-item-2 {
+  padding: 12px 16px 12px 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 72px;
+  position: relative;
+}
+.greg-james {
+  color: var(--rich-black, #011627);
+  text-align: left;
+  font: var(--_16-semi-bold, 600 16px/20px "Inter", sans-serif);
+  position: relative;
+  flex: 1;
+}
+._18-02 {
+  color: var(--navy-grey, #707991);
+  text-align: left;
+  font: var(--_12-reg, 400 12px/16px "Inter", sans-serif);
+  position: relative;
+}
+.i-got-a-job-at-space-x {
+  text-align: left;
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+  position: relative;
+}
+.i-got-a-job-at-space-x-span {
+  color: var(--navy-grey, #707991);
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+}
+.i-got-a-job-at-space-x-span2 {
+  color: var(--rich-black, #011627);
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+}
+.i-got-a-job-at-space-x-span3 {
+  color: var(--navy-grey, #707991);
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+}
+.chat-list-item-3 {
+  padding: 12px 16px 12px 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 72px;
+  position: relative;
+}
+.emily-dorson {
+  color: var(--rich-black, #011627);
+  text-align: left;
+  font: var(--_16-semi-bold, 600 16px/20px "Inter", sans-serif);
+  position: relative;
+  flex: 1;
+}
+._17-42 {
+  color: var(--navy-grey, #707991);
+  text-align: left;
+  font: var(--_12-reg, 400 12px/16px "Inter", sans-serif);
+  position: relative;
+}
+.table-for-four-5-pm-be-there {
+  text-align: left;
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+  position: relative;
+}
+.table-for-four-5-pm-be-there-span {
+  color: var(--navy-grey, #707991);
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+}
+.table-for-four-5-pm-be-there-span2 {
+  color: var(--rich-black, #011627);
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+}
+.table-for-four-5-pm-be-there-span3 {
+  color: var(--navy-grey, #707991);
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+}
+.group-chat-list-item {
+  padding: 12px 16px 12px 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 72px;
+  position: relative;
+}
+.office-chat {
+  color: var(--rich-black, #011627);
+  text-align: left;
+  font: var(--_16-semi-bold, 600 16px/20px "Inter", sans-serif);
+  position: relative;
+  flex: 1;
+}
+._17-08 {
+  color: var(--navy-grey, #707991);
+  text-align: left;
+  font: var(--_12-reg, 400 12px/16px "Inter", sans-serif);
+  position: relative;
+}
+.lewis-all-done-mate {
+  text-align: left;
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+  position: relative;
+}
+.lewis-all-done-mate-span {
+  color: var(--rich-black, #011627);
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+}
+.lewis-all-done-mate-span2 {
+  color: var(--navy-grey, #707991);
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+}
+.channel-chat-list-item {
+  padding: 12px 16px 12px 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 72px;
+  position: relative;
+}
+.avatar3 {
+  background: var(--light-green, #78e378);
+  border-radius: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  position: relative;
+  overflow: hidden;
+}
+.a {
+  color: #ffffff;
+  text-align: left;
+  font: var(--_16-semi-bold, 600 16px/20px "Inter", sans-serif);
+  position: relative;
+}
+.announcements {
+  color: var(--rich-black, #011627);
+  text-align: left;
+  font: var(--_16-semi-bold, 600 16px/20px "Inter", sans-serif);
+  position: relative;
+  flex: 1;
+}
+._16-15 {
+  color: var(--navy-grey, #707991);
+  text-align: left;
+  font: var(--_12-reg, 400 12px/16px "Inter", sans-serif);
+  position: relative;
+}
+.channel-created {
+  color: var(--navy-grey, #707991);
+  text-align: left;
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+  position: relative;
+}
+.chat-list-item-4 {
+  padding: 12px 16px 12px 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 72px;
+  position: relative;
+}
+.little-sister {
+  color: var(--rich-black, #011627);
+  text-align: left;
+  font: var(--_16-semi-bold, 600 16px/20px "Inter", sans-serif);
+  position: relative;
+  flex: 1;
+}
+.wed {
+  color: var(--navy-grey, #707991);
+  text-align: left;
+  font: var(--_12-reg, 400 12px/16px "Inter", sans-serif);
+  position: relative;
+}
+.tell-mom-i-will-be-home-for-tea {
+  text-align: left;
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+  position: relative;
+}
+.tell-mom-i-will-be-home-for-tea-span {
+  color: var(--navy-grey, #707991);
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+}
+.tell-mom-i-will-be-home-for-tea-span2 {
+  color: var(--rich-black, #011627);
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+}
+.tell-mom-i-will-be-home-for-tea-span3 {
+  color: var(--navy-grey, #707991);
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+}
+.group-chat-list-2-item {
+  padding: 12px 16px 12px 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 72px;
+  position: relative;
+}
+.art-class {
+  color: var(--rich-black, #011627);
+  text-align: left;
+  font: var(--_16-semi-bold, 600 16px/20px "Inter", sans-serif);
+  position: relative;
+  flex: 1;
+}
+.tue {
+  color: var(--navy-grey, #707991);
+  text-align: left;
+  font: var(--_12-reg, 400 12px/16px "Inter", sans-serif);
+  position: relative;
+}
+.message3 {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.emily {
+  text-align: left;
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+  position: relative;
+}
+.emily-span {
+  color: var(--rich-black, #011627);
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+}
+.emily-span2 {
+  color: var(--navy-grey, #707991);
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+}
+.frame-1 {
+  border-radius: 4px;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  position: relative;
+  overflow: hidden;
+}
+.editorial {
+  color: var(--navy-grey, #707991);
+  text-align: left;
+  font: var(--_14-reg, 400 14px/18px "Inter", sans-serif);
+  position: relative;
+}
+.main {
+  background: #ffffff;
+  border-radius: 24px;
+  width: 1093px;
+  height: 609px;
+  position: absolute;
+  left: 94px;
+  top: calc(50% - 305px);
+  box-shadow: 0px 72px 80px -48px rgba(34, 58, 40, 1);
+  overflow: hidden;
+}
+.illustration {
+  width: 746px;
+  height: 714px;
+  position: absolute;
+  left: 550px;
+  top: 0px;
+}
+.rectangle-4 {
+  background: #296679;
+  width: 746px;
+  height: 714px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+.day-66-travel {
+  width: 400px;
+  height: 270px;
+  position: absolute;
+  left: 68px;
+  top: 176px;
+  overflow: hidden;
+}
+.vector8 {
+  position: absolute;
+  left: 61.83px;
+  top: 46.69px;
+  overflow: visible;
+}
+.vector-stroke {
+  position: absolute;
+  left: 118.69px;
+  top: 29.26px;
+  overflow: visible;
+}
+.vector-stroke2 {
+  position: absolute;
+  left: 118.69px;
+  top: 17.52px;
+  overflow: visible;
+}
+.vector-stroke3 {
+  position: absolute;
+  left: 118.69px;
+  top: 3.03px;
+  overflow: visible;
+}
+.vector-stroke4 {
+  position: absolute;
+  left: 105.76px;
+  top: 30.39px;
+  overflow: visible;
+}
+.vector-stroke5 {
+  position: absolute;
+  left: 103.73px;
+  top: 18.83px;
+  overflow: visible;
+}
+.vector-stroke6 {
+  position: absolute;
+  left: 101.2px;
+  top: 4.56px;
+  overflow: visible;
+}
+.vector-stroke7 {
+  position: absolute;
+  left: 93.29px;
+  top: 33.73px;
+  overflow: visible;
+}
+.vector-stroke8 {
+  position: absolute;
+  left: 89.27px;
+  top: 22.71px;
+  overflow: visible;
+}
+.vector-stroke9 {
+  position: absolute;
+  left: 84.29px;
+  top: 9.08px;
+  overflow: visible;
+}
+.vector-stroke10 {
+  position: absolute;
+  left: 81.54px;
+  top: 39.19px;
+  overflow: visible;
+}
+.vector-stroke11 {
+  position: absolute;
+  left: 75.71px;
+  top: 29.03px;
+  overflow: visible;
+}
+.vector-stroke12 {
+  position: absolute;
+  left: 68.43px;
+  top: 16.48px;
+  overflow: visible;
+}
+.vector-stroke13 {
+  position: absolute;
+  left: 70.96px;
+  top: 46.6px;
+  overflow: visible;
+}
+.vector-stroke14 {
+  position: absolute;
+  left: 63.41px;
+  top: 37.61px;
+  overflow: visible;
+}
+.vector-stroke15 {
+  position: absolute;
+  left: 54.06px;
+  top: 26.5px;
+  overflow: visible;
+}
+.vector-stroke16 {
+  position: absolute;
+  left: 61.83px;
+  top: 55.76px;
+  overflow: visible;
+}
+.vector-stroke17 {
+  position: absolute;
+  left: 52.84px;
+  top: 48.22px;
+  overflow: visible;
+}
+.vector-stroke18 {
+  position: absolute;
+  left: 41.67px;
+  top: 38.87px;
+  overflow: visible;
+}
+.vector-stroke19 {
+  position: absolute;
+  left: 54.37px;
+  top: 66.33px;
+  overflow: visible;
+}
+.vector-stroke20 {
+  position: absolute;
+  left: 44.2px;
+  top: 60.46px;
+  overflow: visible;
+}
+.vector-stroke21 {
+  position: absolute;
+  left: 31.64px;
+  top: 53.19px;
+  overflow: visible;
+}
+.vector-stroke22 {
+  position: absolute;
+  left: 48.9px;
+  top: 78.06px;
+  overflow: visible;
+}
+.vector-stroke23 {
+  position: absolute;
+  left: 37.88px;
+  top: 74.05px;
+  overflow: visible;
+}
+.vector-stroke24 {
+  position: absolute;
+  left: 24.23px;
+  top: 69.08px;
+  overflow: visible;
+}
+.vector-stroke25 {
+  position: absolute;
+  left: 45.56px;
+  top: 90.53px;
+  overflow: visible;
+}
+.vector-stroke26 {
+  position: absolute;
+  left: 34.03px;
+  top: 88.49px;
+  overflow: visible;
+}
+.vector-stroke27 {
+  position: absolute;
+  left: 19.71px;
+  top: 85.97px;
+  overflow: visible;
+}
+.vector-stroke28 {
+  position: absolute;
+  left: 44.43px;
+  top: 103.39px;
+  overflow: visible;
+}
+.vector-stroke29 {
+  position: absolute;
+  left: 32.72px;
+  top: 103.39px;
+  overflow: visible;
+}
+.vector-stroke30 {
+  position: absolute;
+  left: 18.17px;
+  top: 103.39px;
+  overflow: visible;
+}
+.vector-stroke31 {
+  position: absolute;
+  left: 45.56px;
+  top: 115.18px;
+  overflow: visible;
+}
+.vector-stroke32 {
+  position: absolute;
+  left: 34.03px;
+  top: 117.17px;
+  overflow: visible;
+}
+.vector-stroke33 {
+  position: absolute;
+  left: 19.71px;
+  top: 119.33px;
+  overflow: visible;
+}
+.vector-stroke34 {
+  position: absolute;
+  left: 48.9px;
+  top: 126.6px;
+  overflow: visible;
+}
+.vector-stroke35 {
+  position: absolute;
+  left: 37.88px;
+  top: 130.53px;
+  overflow: visible;
+}
+.vector-stroke36 {
+  position: absolute;
+  left: 24.23px;
+  top: 134.77px;
+  overflow: visible;
+}
+.vector-stroke37 {
+  position: absolute;
+  left: 54.37px;
+  top: 137.3px;
+  overflow: visible;
+}
+.vector-stroke38 {
+  position: absolute;
+  left: 44.2px;
+  top: 143.04px;
+  overflow: visible;
+}
+.vector-stroke39 {
+  position: absolute;
+  left: 31.64px;
+  top: 149.27px;
+  overflow: visible;
+}
+.vector-stroke40 {
+  position: absolute;
+  left: 182.46px;
+  top: 78.06px;
+  overflow: visible;
+}
+.vector-stroke41 {
+  position: absolute;
+  left: 193.22px;
+  top: 74.05px;
+  overflow: visible;
+}
+.vector-stroke42 {
+  position: absolute;
+  left: 177.49px;
+  top: 66.33px;
+  overflow: visible;
+}
+.vector-stroke43 {
+  position: absolute;
+  left: 187.39px;
+  top: 60.46px;
+  overflow: visible;
+}
+.vector-stroke44 {
+  position: absolute;
+  left: 198.19px;
+  top: 53.19px;
+  overflow: visible;
+}
+.vector-stroke45 {
+  position: absolute;
+  left: 170.71px;
+  top: 55.76px;
+  overflow: visible;
+}
+.vector-stroke46 {
+  position: absolute;
+  left: 179.48px;
+  top: 48.22px;
+  overflow: visible;
+}
+.vector-stroke47 {
+  position: absolute;
+  left: 189.02px;
+  top: 38.87px;
+  overflow: visible;
+}
+.vector-stroke48 {
+  position: absolute;
+  left: 162.31px;
+  top: 46.6px;
+  overflow: visible;
+}
+.vector-stroke49 {
+  position: absolute;
+  left: 169.67px;
+  top: 37.61px;
+  overflow: visible;
+}
+.vector-stroke50 {
+  position: absolute;
+  left: 177.72px;
+  top: 26.5px;
+  overflow: visible;
+}
+.vector-stroke51 {
+  position: absolute;
+  left: 152.63px;
+  top: 39.19px;
+  overflow: visible;
+}
+.vector-stroke52 {
+  position: absolute;
+  left: 158.33px;
+  top: 29.03px;
+  overflow: visible;
+}
+.vector-stroke53 {
+  position: absolute;
+  left: 164.56px;
+  top: 16.48px;
+  overflow: visible;
+}
+.vector-stroke54 {
+  position: absolute;
+  left: 141.88px;
+  top: 33.73px;
+  overflow: visible;
+}
+.vector-stroke55 {
+  position: absolute;
+  left: 145.81px;
+  top: 22.71px;
+  overflow: visible;
+}
+.vector-stroke56 {
+  position: absolute;
+  left: 150.06px;
+  top: 9.08px;
+  overflow: visible;
+}
+.vector-stroke57 {
+  position: absolute;
+  left: 130.44px;
+  top: 30.39px;
+  overflow: visible;
+}
+.vector-stroke58 {
+  position: absolute;
+  left: 132.43px;
+  top: 18.83px;
+  overflow: visible;
+}
+.vector-stroke59 {
+  position: absolute;
+  left: 134.6px;
+  top: 4.56px;
+  overflow: visible;
+}
+.vector-stroke60 {
+  position: absolute;
+  left: 4.11px;
+  top: 266.25px;
+  overflow: visible;
+}
+.vector-stroke61 {
+  position: absolute;
+  left: 75.03px;
+  top: 266.25px;
+  overflow: visible;
+}
+.vector-stroke62 {
+  position: absolute;
+  left: 320.18px;
+  top: 266.25px;
+  overflow: visible;
+}
+.vector-stroke63 {
+  position: absolute;
+  left: 336.23px;
+  top: 266.25px;
+  overflow: visible;
+}
+.vector-stroke64 {
+  position: absolute;
+  left: 382.15px;
+  top: 266.25px;
+  overflow: visible;
+}
+.vector-stroke65 {
+  position: absolute;
+  left: 43.75px;
+  top: 69.26px;
+  overflow: visible;
+}
+.vector-stroke66 {
+  position: absolute;
+  left: 159.28px;
+  top: 52.15px;
+  overflow: visible;
+}
+.vector-stroke67 {
+  position: absolute;
+  left: 103.73px;
+  top: 101.54px;
+  overflow: visible;
+}
+.vector-stroke68 {
+  position: absolute;
+  left: 194.58px;
+  top: 85.15px;
+  overflow: visible;
+}
+.vector-stroke69 {
+  position: absolute;
+  left: 252.34px;
+  top: 29.71px;
+  overflow: visible;
+}
+.vector-stroke70 {
+  position: absolute;
+  left: 322.94px;
+  top: 65.06px;
+  overflow: visible;
+}
+.vector9 {
+  position: absolute;
+  left: 105.31px;
+  top: 226.61px;
+  overflow: visible;
+}
+.vector-stroke71 {
+  position: absolute;
+  left: 103.5px;
+  top: 224.8px;
+  overflow: visible;
+}
+.vector10 {
+  position: absolute;
+  left: 115.21px;
+  top: 236.5px;
+  overflow: visible;
+}
+.vector-stroke72 {
+  position: absolute;
+  left: 113.4px;
+  top: 234.69px;
+  overflow: visible;
+}
+.vector11 {
+  position: absolute;
+  left: 122.49px;
+  top: 243.77px;
+  overflow: visible;
+}
+.vector-stroke73 {
+  position: absolute;
+  left: 120.68px;
+  top: 241.96px;
+  overflow: visible;
+}
+.vector12 {
+  position: absolute;
+  left: 91.3px;
+  top: 153.06px;
+  overflow: visible;
+}
+.group {
+  opacity: 0.36000001430511475;
+  position: absolute;
+  left: 91.3px;
+  top: 153.06px;
+  overflow: visible;
+}
+.vector16 {
+  opacity: 0.36000001430511475;
+  position: absolute;
+  left: 155.16px;
+  top: 239.61px;
+  overflow: visible;
+}
+.group2 {
+  opacity: 0.25;
+  position: absolute;
+  left: 108.43px;
+  top: 152.61px;
+  overflow: visible;
+}
+.vector-stroke74 {
+  position: absolute;
+  left: 89.49px;
+  top: 151.25px;
+  overflow: visible;
+}
+.vector18 {
+  position: absolute;
+  left: 221.97px;
+  top: 226.61px;
+  overflow: visible;
+}
+.vector-stroke75 {
+  position: absolute;
+  left: 220.16px;
+  top: 224.8px;
+  overflow: visible;
+}
+.vector19 {
+  position: absolute;
+  left: 231.86px;
+  top: 236.5px;
+  overflow: visible;
+}
+.vector-stroke76 {
+  position: absolute;
+  left: 230.06px;
+  top: 234.69px;
+  overflow: visible;
+}
+.vector20 {
+  position: absolute;
+  left: 239.14px;
+  top: 243.77px;
+  overflow: visible;
+}
+.vector-stroke77 {
+  position: absolute;
+  left: 237.33px;
+  top: 241.96px;
+  overflow: visible;
+}
+.vector21 {
+  position: absolute;
+  left: 82.71px;
+  top: 231.17px;
+  overflow: visible;
+}
+.vector-stroke78 {
+  position: absolute;
+  left: 80.9px;
+  top: 229.36px;
+  overflow: visible;
+}
+.vector22 {
+  position: absolute;
+  left: 87.77px;
+  top: 209.23px;
+  overflow: visible;
+}
+.vector-stroke79 {
+  position: absolute;
+  left: 85.97px;
+  top: 207.42px;
+  overflow: visible;
+}
+.vector23 {
+  position: absolute;
+  left: 274.49px;
+  top: 245.26px;
+  overflow: visible;
+}
+.vector24 {
+  position: absolute;
+  left: 274.44px;
+  top: 245.26px;
+  overflow: visible;
+}
+.vector-stroke80 {
+  position: absolute;
+  left: 272.68px;
+  top: 243.45px;
+  overflow: visible;
+}
+.vector25 {
+  position: absolute;
+  left: 239.82px;
+  top: 164.98px;
+  overflow: visible;
+}
+.vector26 {
+  opacity: 0.5600000023841858;
+  position: absolute;
+  left: 239.82px;
+  top: 165.03px;
+  overflow: visible;
+}
+.vector-stroke81 {
+  position: absolute;
+  left: 238.01px;
+  top: 163.17px;
+  overflow: visible;
+}
+.vector27 {
+  position: absolute;
+  left: 175.37px;
+  top: 164.53px;
+  overflow: visible;
+}
+.vector28 {
+  opacity: 0.5600000023841858;
+  position: absolute;
+  left: 175.37px;
+  top: 164.53px;
+  overflow: visible;
+}
+.vector-stroke82 {
+  position: absolute;
+  left: 173.56px;
+  top: 162.72px;
+  overflow: visible;
+}
+.vector29 {
+  position: absolute;
+  left: 107.15px;
+  top: 165.03px;
+  overflow: visible;
+}
+.vector30 {
+  opacity: 0.5600000023841858;
+  position: absolute;
+  left: 107.17px;
+  top: 164.98px;
+  overflow: visible;
+}
+.vector-stroke83 {
+  position: absolute;
+  left: 105.35px;
+  top: 163.22px;
+  overflow: visible;
+}
+.vector-stroke84 {
+  opacity: 0.47999998927116394;
+  position: absolute;
+  left: 158.37px;
+  top: 154.73px;
+  overflow: visible;
+}
+.vector-stroke85 {
+  position: absolute;
+  left: 144.99px;
+  top: 203.76px;
+  overflow: visible;
+}
+.vector-stroke86 {
+  position: absolute;
+  left: 215.37px;
+  top: 202.73px;
+  overflow: visible;
+}
+.vector31 {
+  position: absolute;
+  left: 293.97px;
+  top: 192.79px;
+  overflow: visible;
+}
+.vector-stroke87 {
+  position: absolute;
+  left: 292.16px;
+  top: 190.99px;
+  overflow: visible;
+}
+.vector-stroke88 {
+  position: absolute;
+  left: 272.68px;
+  top: 167.73px;
+  overflow: visible;
+}
+.vector-stroke89 {
+  position: absolute;
+  left: 274.94px;
+  top: 175.5px;
+  overflow: visible;
+}
+.vector-stroke90 {
+  position: absolute;
+  left: 277.06px;
+  top: 183.22px;
+  overflow: visible;
+}
+.vector-stroke91 {
+  position: absolute;
+  left: 277.97px;
+  top: 190.99px;
+  overflow: visible;
+}
+.vector32 {
+  position: absolute;
+  left: 150.87px;
+  top: 243.95px;
+  overflow: visible;
+}
+.vector33 {
+  position: absolute;
+  left: 150.87px;
+  top: 243.95px;
+  overflow: visible;
+}
+.vector34 {
+  position: absolute;
+  left: 150.87px;
+  top: 243.95px;
+  overflow: visible;
+}
+.vector-stroke92 {
+  position: absolute;
+  left: 149.06px;
+  top: 242.14px;
+  overflow: visible;
+}
+.vector-stroke93 {
+  position: absolute;
+  left: 118.51px;
+  top: 173.74px;
+  overflow: visible;
+}
+.vector-stroke94 {
+  position: absolute;
+  left: 126.01px;
+  top: 171.44px;
+  overflow: visible;
+}
+.vector-stroke95 {
+  position: absolute;
+  left: 187.34px;
+  top: 172.66px;
+  overflow: visible;
+}
+.vector-stroke96 {
+  position: absolute;
+  left: 194.85px;
+  top: 170.4px;
+  overflow: visible;
+}
+.vector-stroke97 {
+  position: absolute;
+  left: 244.66px;
+  top: 175.09px;
+  overflow: visible;
+}
+.vector-stroke98 {
+  position: absolute;
+  left: 250.85px;
+  top: 173.2px;
+  overflow: visible;
+}
+.vector35 {
+  position: absolute;
+  left: 318.75px;
+  top: 117.46px;
+  overflow: visible;
+}
+.vector36 {
+  position: absolute;
+  left: 318.75px;
+  top: 117.46px;
+  overflow: visible;
+}
+.vector37 {
+  opacity: 0.5600000023841858;
+  position: absolute;
+  left: 318.79px;
+  top: 117.46px;
+  overflow: visible;
+}
+.vector-stroke99 {
+  position: absolute;
+  left: 357.56px;
+  top: 133.33px;
+  overflow: visible;
+}
+.vector-stroke100 {
+  position: absolute;
+  left: 346.85px;
+  top: 151.84px;
+  overflow: visible;
+}
+.vector-stroke101 {
+  position: absolute;
+  left: 344.77px;
+  top: 171.35px;
+  overflow: visible;
+}
+.vector-stroke102 {
+  position: absolute;
+  left: 336.23px;
+  top: 193.56px;
+  overflow: visible;
+}
+.vector-stroke103 {
+  position: absolute;
+  left: 226.89px;
+  top: 0.32px;
+  overflow: visible;
+}
+.vector-stroke104 {
+  position: absolute;
+  left: 267.21px;
+  top: 7.36px;
+  overflow: visible;
+}
+.vector-stroke105 {
+  position: absolute;
+  left: 353.18px;
+  top: 36.48px;
+  overflow: visible;
+}
+.vector-stroke106 {
+  position: absolute;
+  left: 185.76px;
+  top: 266.25px;
+  overflow: visible;
+}
+.vector-stroke107 {
+  position: absolute;
+  left: 172.2px;
+  top: 266.25px;
+  overflow: visible;
+}
+.login-container {
+  width: 550px;
+  height: 714px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+.rectangle-3 {
+  background: #ffffff;
+  width: 550px;
+  height: 714px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+.meeting-anywhere-anytime-within-few-clicks-of-buttons {
+  color: #175568;
+  text-align: left;
+  font: 600 24px/150% "Inter", sans-serif;
+  position: absolute;
+  left: 64px;
+  top: 112px;
+  width: 422px;
+  height: 104px;
+}
+.frame-13 {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  position: absolute;
+  left: 64px;
+  top: 40px;
+}
+.logo {
+  flex-shrink: 0;
+  position: relative;
+  overflow: visible;
+}
+.chatgram2 {
+  color: #000000;
+  text-align: left;
+  font: 600 32px/100% "Inter", sans-serif;
+  position: relative;
+  width: 307px;
+}
+.welcome-back-please-log-in-to-your-account {
+  color: #000000;
+  text-align: left;
+  font: 400 16px/100% "Inter", sans-serif;
+  position: absolute;
+  left: 64px;
+  top: 201px;
+  width: 422px;
+  height: 47px;
+}
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 422px;
+  height: 320px;
+  position: absolute;
+  left: 64px;
+  top: 256px;
+}
+.email {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.email2 {
+  color: #2f3d4c;
+  text-align: left;
+  font: 600 16px/100% "Inter", sans-serif;
+  position: relative;
+  align-self: stretch;
+}
+.frame-2 {
+  background: #ffffff;
+  border-radius: 8px;
+  border-style: solid;
+  border-color: #177390;
+  border-width: 1px;
+  padding: 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.robert-langster-gmail-com {
+  color: #000000;
+  text-align: left;
+  font: 400 16px/24px "Inter", sans-serif;
+  position: relative;
+  flex: 1;
+}
+.password {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.password2 {
+  color: #000000;
+  text-align: left;
+  font: 600 16px/100% "Inter", sans-serif;
+  position: relative;
+  align-self: stretch;
+}
+.frame-14 {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1;
+  height: 12px;
+  position: relative;
+}
+.ellipse-2 {
+  background: #000000;
+  border-radius: 50%;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  position: relative;
+}
+.ellipse-3 {
+  background: #000000;
+  border-radius: 50%;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  position: relative;
+}
+.ellipse-4 {
+  background: #000000;
+  border-radius: 50%;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  position: relative;
+}
+.ellipse-5 {
+  background: #000000;
+  border-radius: 50%;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  position: relative;
+}
+.ellipse-6 {
+  background: #000000;
+  border-radius: 50%;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  position: relative;
+}
+.ellipse-7 {
+  background: #000000;
+  border-radius: 50%;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  position: relative;
+}
+.ellipse-8 {
+  background: #000000;
+  border-radius: 50%;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  position: relative;
+}
+.ellipse-9 {
+  background: #000000;
+  border-radius: 50%;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  position: relative;
+}
+.eye-off {
+  flex-shrink: 0;
+  position: relative;
+  overflow: visible;
+}
+.extra {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.remember {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.check-box-default {
+  flex-shrink: 0;
+  position: relative;
+  overflow: visible;
+}
+.remember-me {
+  color: #000000;
+  text-align: left;
+  font: 400 16px/100% "Inter", sans-serif;
+  position: relative;
+}
+.forgot-password {
+  color: #177390;
+  text-align: right;
+  font: 400 16px/100% "Inter", sans-serif;
+  text-decoration: underline;
+  position: relative;
+}
+.frame-16 {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.button-login {
+  background: #177390;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  position: relative;
+}
+.login {
+  color: #ffffff;
+  text-align: center;
+  font: 600 16px/100% "Inter", sans-serif;
+  position: relative;
+  flex: 1;
+}
+.button-login2 {
+  border-radius: 8px;
+  border-style: solid;
+  border-color: #177390;
+  border-width: 1px;
+  padding: 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  position: relative;
+}
+.sign-up {
+  color: #177390;
+  text-align: center;
+  font: 600 16px/100% "Inter", sans-serif;
+  position: relative;
+  flex: 1;
+}
+.frame-17 {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  position: absolute;
+  left: 64px;
+  top: 632px;
+}
+.or-login-with {
+  color: #58745e;
+  text-align: left;
+  font: 400 16px/100% "Inter", sans-serif;
+  position: relative;
+}
+.facebook {
+  color: #177390;
+  text-align: left;
+  font: 500 16px/100% "Inter", sans-serif;
+  position: relative;
+}
+.linked-in {
+  color: #177390;
+  text-align: left;
+  font: 500 16px/100% "Inter", sans-serif;
+  position: relative;
+}
+.google {
+  color: #177390;
+  text-align: left;
+  font: 500 16px/100% "Inter", sans-serif;
+  position: relative;
+}

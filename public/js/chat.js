@@ -10,25 +10,26 @@ console.log('start');
 
   let _room_list = new Array();
 
-  app.querySelector('.join-screen #join-button').addEventListener('click', function() {
-    let username = app.querySelector('.join-screen #username').value;
-
-    if (username.length == 0) {
-      alert("Cannot use blank username!");
-      return;
-    }
-
-    socket.emit('newuser', username);
-    socket.emit('getroomlist');
-    socket.on('returnroomlist', function(room_list) {
-      _room_list = room_list;
-      _room_list.forEach(createAllRoom);
-    });
-    _username = username;
-    app.querySelector('.join-screen').classList.remove('active');
-    app.querySelector('.room-select-screen').classList.add('active');
+  document.addEventListener('DOMContentLoaded', () => {
+    fetch('/roomlist', {
+      method: 'GET'
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        if (data.success) {
+          _username = data.username;
+          _room_list = data.rooms;
+          _room_list.forEach(createAllRoom);
+        } else {
+          window.location.href = '/';
+        }
+      })
+      .catch(error => {
+        alert('Error: ', error);
+      });
   });
-
+    
   socket.on('addroom', function(id, name) {
     createRoom(id, name);
   })

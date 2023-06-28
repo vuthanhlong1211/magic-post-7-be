@@ -1,0 +1,170 @@
+
+body {
+  margin: 0;
+  background-image: url(../assets/background.jpg);
+  background-size: cover;
+}
+
+.main,
+.main * {
+    box-sizing: border-box;
+}
+.main {
+  border-radius: 24px;
+  width: 550px;
+  height: 600px;
+  position: absolute;
+  left: 33%;
+  top: 15%;
+  box-shadow: 0px 72px 80px -48px rgba(34, 58, 40, 1);
+  overflow: hidden;
+}
+
+.login-container {
+  width: 550px;
+  height: 714px;
+  position: relative;
+  left: 0px;
+  top: 0px;                 
+}
+.rectangle-3 {
+  background: #ffffff;
+  width: 550px;
+  height: 714px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+.name {
+  color: #175568;
+  text-align: left;
+  font: 600 24px/150% "Inter", sans-serif;
+  position: absolute;
+  left: 64px;
+  top: 112px;
+  width: 422px;
+  height: 104px;
+}
+.frame-13 {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 30%;
+  top: 20px;
+}
+.logo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  flex-shrink: 0;
+  position: relative;
+  overflow: visible;
+  width: 210px;
+  height: 210px;
+  left: 0%;
+  top: 0%;
+}
+
+.welcome-back-please-log-in-to-your-account {
+  color: #000000;
+  text-align: left;
+  font: 400 16px/100% "Inter", sans-serif;
+  position: absolute;
+  left: 64px;
+  top: 201px;
+  width: 422px;
+  height: 47px;
+}
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  justify-content: flex-start;
+  width: 422px;
+  height: 320px;
+  position: absolute;
+  left: 64px;
+  top: 256px;
+}
+
+.label-input {
+  color: #2f3d4c;
+  text-align: center;
+  font: 600 16px/100% "Inter", sans-serif;
+  position: relative;
+  align-self: stretch;
+}
+.input {
+  background: #ffffff;
+  border-radius: 8px;
+  border-style: solid;
+  border-color: #177390;
+  border-width: 1px;
+  padding: 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+  color: #000000;
+  text-align: left;
+  font: 400 16px/24px "Inter", sans-serif;
+  position: relative;
+  flex: 1;
+}
+
+
+.frame-button {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+#button-login {
+  background: #177390;
+  border-radius: 8px;
+  border-color: #ffffff;
+  padding: 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  position: relative;
+  color: #ffffff;
+  text-align: center;
+  font: 600 16px/100% "Inter", sans-serif;
+  position: relative;
+  flex: 1;
+}
+#button-signup {
+  border-radius: 8px;
+  border-style: solid;
+  border-color: #177390;
+  border-width: 1px;
+  padding: 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  position: relative;
+  color: #177390;
+  text-align: center;
+  font: 600 16px/100% "Inter", sans-serif;
+  position: relative;
+  flex: 1;
+}
