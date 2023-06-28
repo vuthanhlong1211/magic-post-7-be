@@ -1,4 +1,4 @@
-(function() {
+(() => {
 
     const main = document.querySelector('.main');
 
@@ -23,5 +23,9 @@
         .catch(error => {
             alert('Error: ', error);
         });
+    });
+
+    main.querySelector('.login-form .frame-button #button-signup').addEventListener('click', () => {
+        window.location.href = '/signup';
     });
 })();

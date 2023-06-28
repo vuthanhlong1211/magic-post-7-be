@@ -1,5 +1,4 @@
-console.log('start');
-(function() {
+(() => {
   const app = document.querySelector('.app');
   const socket = io();
 
@@ -70,7 +69,7 @@ console.log('start');
   });
 
   app.querySelector('.chat-screen #exit-chat').addEventListener('click', function() {
-    socket.emit('exituser', _username);
+    socket.emit('exituser', _username, _roomid);
     window.location.href = window.location.href
   });
 

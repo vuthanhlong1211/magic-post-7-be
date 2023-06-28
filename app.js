@@ -1,9 +1,13 @@
+const mongoose = require('mongoose');
 const app = require('express')();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const path = require('path');
 const express = require('express');
-const session = require('express-session')
+const session = require('express-session');
+const createUser = require('./server/controllers/users');
+const login = require('./server/controllers/auth');
+require('dotenv').config();
 
 const oneDay = 1000 * 60 * 60 * 24;
 
@@ -16,6 +20,15 @@ app.use(session({
   saveUninitialized: true,
   cookie: {maxAge: oneDay}
 }));
+
+(async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URL);
+    console.log('Database connected!');
+  } catch (error) {
+    console.log("Error connecting database: ", error);
+  }
+})();
 
 class room {
   constructor(id, password) {
@@ -58,7 +71,6 @@ class user {
  *  password
  * }
  */
-user_list = new Array({username: 'test', password: '123'}, {username: 'hakushin', password: 'really'});
 
 /**
  * room {
@@ -78,8 +90,12 @@ const checkAuth = (req, res, next) => {
 }
 
 // Khởi tạo server
-app.get('/dashboard', checkAuth, function(req, res) {
+app.get('/dashboard', checkAuth, (req, res) => {
   res.sendFile(path.join(__dirname, 'public/views', 'index.html'));
+});
+
+app.get('/signup', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/views', 'signup.html'));
 });
 
 app.get('/roomlist', checkAuth, (req, res) => {
@@ -91,20 +107,9 @@ app.get('/roomlist', checkAuth, (req, res) => {
   res.json({success: true, username: username, rooms: roomlist});
 })
 
-app.post('/login', (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
+app.post('/signup', createUser);
 
-  const user = user_list.find(user => user.username === username);
-  if (user === undefined || user.password !== password) {
-    res.json({success: false});
-  } else {
-    req.session.authenticated = true;
-    req.session.username = username;
-    res.json({success: true});
-  }
-  console.log(req.session);
-});
+app.post('/login', login);
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/views/login.html'));
@@ -114,8 +119,8 @@ app.get('/', (req, res) => {
 // Đăng ký các sự kiện của socket
 io.on('connection', function(socket) {
   console.log('connection established! Welcome ' + socket.id);
-  socket.on('exituser', function(username) {
-    socket.broadcast.emit('update', username + 'has left the room');
+  socket.on('exituser', function(username, roomid) {
+    socket.to(roomid).emit('update', username + 'has left the room');
   });
   socket.on('ask_permission_to_join', function(username, roomid, password) {
     let room = room_list.find(room => room.id == roomid);
