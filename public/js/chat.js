@@ -69,7 +69,7 @@
 
   app.querySelector('.chat-screen #exit-chat').addEventListener('click', function() {
     socket.emit('exituser', _username, _roomid);
-    window.location.href = window.location.href
+    window.location.href = '/dashboard';
   });
 
   socket.on('update', function(message) {

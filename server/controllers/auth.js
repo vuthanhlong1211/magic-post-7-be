@@ -5,6 +5,11 @@ const login = async (req, res) => {
     const {username, password} = req.body;
 
     const user = await USERS.findOne({username}).exec();
+    console.log(user);
+    if (!user) {
+        res.json({success: false});
+        return;
+    }
     const truePassword = user.password;
     if (truePassword == undefined) {
         res.json({success: false});

@@ -39,14 +39,10 @@ app.get('/', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/views/login.html'));
+  res.sendFile(path.join(__dirname, 'public/views/signup_login.html'));
 });
 
 app.post('/login', login);
-
-app.get('/signup', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/views', 'signup.html'));
-});
 
 app.post('/signup', createUser);
 

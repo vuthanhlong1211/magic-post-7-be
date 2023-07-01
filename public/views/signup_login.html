@@ -1,0 +1,64 @@
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="../css/test.css" /> 
+        <title>Link CSS to HTML</title>
+    </head>
+    
+    <body>
+        <!-- <div class="main">
+            <div class="signup-form">
+                <label for="username">Username
+                    <input type="text" id="username">
+                </label>
+                <label for="password">Password
+                    <input type="password" id="password">
+                </label>
+                <label for="re-password">Confirm Password
+                    <input type="password" id="re-password">
+                </label>
+            </div>
+            <div class="submit-button">
+                <button id="signup-button">Sign up</button>
+            </div>
+        </div> -->
+        <div class="container right-panel-active">
+            <!-- Sign Up Form 1-->
+            <div class="container__form container--signup">
+                <form action="#" class="form" id="form1">
+                    <h2 class="form__title">Sign Up</h2>
+                    <input type="text" placeholder="Username" class="input" id = "username_signup" />
+                    <input type="password" placeholder="Password" class="input" id = "password_signup" />
+                    <input type="password" placeholder="Confirm Password" class="input" id = "repassword" />
+                    <button class="btn">Sign Up</button>
+                </form>
+            </div>
+        
+            <!-- Sign In Form 2-->
+            <div class="container__form container--signin">
+                <form action="#" class="form" id="form2">
+                    <h2 class="form__title">Sign In</h2>
+                    <input type="text" placeholder="Username" class="input" id ="username_signin"/>
+                    <input type="password" placeholder="Password" class="input" id = "password_signin"/>
+                    <a href="#" class="link">Forgot your password?</a>
+                    <button class="btn">Sign In</button>
+                </form>
+            </div>
+        
+            <!-- Overlay -->
+            <div class="container__overlay">
+                <div class="overlay">
+                    <div class="overlay__panel overlay--left">
+                        <button class="btn" id="signIn">Sign In</button>
+                    </div>
+                    <div class="overlay__panel overlay--right">
+                        <button class="btn" id="signUp">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="../js/signinup_trans.js"></script>
+    </body>
+</html>
