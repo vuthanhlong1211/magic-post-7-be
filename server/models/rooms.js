@@ -6,15 +6,31 @@ const roomSchema = new Schema({
         type: String,
         require: true
     },
-    members: [Schema.Types.ObjectId],
+    password: {
+        type: String,
+    },
+    members: [mongoose.Types.ObjectId],
     messages: [
         {
-            _id: Schema.Types.ObjectId,
-            sender: Schema.Types.ObjectId,
-            content: String,
-            timestamp: Date
+            _id: {
+                type: mongoose.Types.ObjectId,
+                default: new mongoose.Types.ObjectId(),
+            },
+            sender: {
+                type: String,
+                require: true,
+            },
+            content: {
+                type: String,
+                require: true,
+            },
+            timestamp: {
+                type: Date,
+                default: Date.now()
+            }
         }
     ]
+    
 });
 const ROOMS = mongoose.model('Room', roomSchema);
 module.exports = ROOMS;

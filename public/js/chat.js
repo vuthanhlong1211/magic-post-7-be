@@ -15,11 +15,11 @@
     })
       .then(response => response.json())
       .then(data => {
-        console.log(data);
         if (data.success) {
           _username = data.username;
           _room_list = data.rooms;
           _room_list.forEach(createAllRoom);
+          socket.emit('get_user_info', _username);
         } else {
           window.location.href = '/';
         }
@@ -29,9 +29,9 @@
       });
   });
     
-  socket.on('addroom', function(id, name) {
+  socket.on('addroom', (id, name) => {
     createRoom(id, name);
-  })
+  });
 
   app.querySelector('.room-select-screen #create-room').addEventListener('click', function() {
     let room_name = app.querySelector('.room-select-screen #room-name').value;
@@ -58,7 +58,6 @@
       text: message
     });
 
-    console.log(_roomid);
 
     socket.emit('chat', {
       username: _username,
@@ -116,6 +115,10 @@
         } else {
           _roomid = id;
           socket.emit('joining_room', _username, _roomid);
+          socket.emit('get_messages_history', _roomid);
+          socket.on('return_messages_history', (messages) => {
+            console.log(messages);
+          });
           app.querySelector('.room-select-screen').classList.remove('active');
           app.querySelector('.chat-screen').classList.add('active');
         }

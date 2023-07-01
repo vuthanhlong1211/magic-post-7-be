@@ -1,11 +1,5 @@
 const USERS = require('../models/users');
-const bcrypt = require('bcrypt');
-
-const hashPassword = async (password) => {
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(password, salt);
-    return hash;
-};
+const {hashPassword} = require('../utils/utils');
 
 const createUser = async (req, res) => {
     const {username, password} = req.body;
@@ -17,7 +11,7 @@ const createUser = async (req, res) => {
 
     const hashedPassword = await hashPassword(password);
 
-    console.log(await USERS.create({username, password: hashedPassword}));
+    await USERS.create({username, password: hashedPassword});
 
     return res.json({message: 'success'});
 };

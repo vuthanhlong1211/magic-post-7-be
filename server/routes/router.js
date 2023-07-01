@@ -1,12 +1,19 @@
-import express from "express";
-import { Router } from "express";
-const app = require('express')();
-const path = require('path');
+const Router = require('express');
+const authRoute = require('./auth');
+const dashboardRoute = require('./dashboard');
+const signupRoute = require('./signup');
+const roomRoute = require('./room');
 
 const router = Router();
 
-router.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views', 'login.html'));
+router.get('/', (req, res) => {
+    res.redirect('/login');
 });
 
-export default router;
+router.use('/login', authRoute);
+router.use('/signup', signupRoute);
+router.use('/dashboard', dashboardRoute);
+router.use('/roomlist', roomRoute);
+
+
+module.exports = router;
