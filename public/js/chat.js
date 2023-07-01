@@ -33,6 +33,7 @@
     createRoom(id, name);
   });
 
+  
   app.querySelector('.room-select-screen #create-room').addEventListener('click', function() {
     let room_name = app.querySelector('.room-select-screen #room-name').value;
     if (room_name.length == 0) {
@@ -45,6 +46,7 @@
     }
     socket.emit('req_new_room', room_name, room_password);
   });
+
 
   app.querySelector('.chat-screen #send-message').addEventListener('click', function() {
     let message = app.querySelector('.chat-screen #message-input').value;
