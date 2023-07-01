@@ -4,6 +4,11 @@ const USERS = require('../models/users');
 const login = async (req, res) => {
     const {username, password} = req.body;
 
+    if (username.length == 0 ) {
+        res.json({success: false});
+        return;
+    };
+
     const user = await USERS.findOne({username}).exec();
     console.log(user);
     if (!user) {

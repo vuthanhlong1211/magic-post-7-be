@@ -38,6 +38,9 @@ fistForm.addEventListener("submit", () => {
 		} else if (result.message === 'password_invalid') {
 			alert('Password is not valid');
 			return;
+		} else if (result.message === 'username_invalid') {
+			alert('Username is invalid');
+			return;
 		}
 	})
 	.catch(error => {
