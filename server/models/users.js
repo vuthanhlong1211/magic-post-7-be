@@ -9,6 +9,10 @@ const userSchema = new Schema({
     password: {
         type: String,
         require: true
+    },
+    userType:{
+        type: String,
+        require: true
     }
 });
 const USERS = mongoose.model('User', userSchema);
