@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+//orders sent from sender to receiver, both are customers
 const orderSchema = new Schema({
     senderInfo: 
         {
@@ -57,7 +58,7 @@ const orderSchema = new Schema({
         enum: ['Tài liệu', 'Hàng hóa'],
         required: true
     },
-    content: 
+    content:[
         {
             content:{
                 type: String
@@ -73,6 +74,7 @@ const orderSchema = new Schema({
                 type: String
             }
         }
+    ]
     ,
     specialService: {
         type: String
@@ -174,7 +176,6 @@ const orderSchema = new Schema({
             }
         ]
     }
-
 });
 const ORDERS = mongoose.model('Order', orderSchema);
 module.exports = ORDERS;

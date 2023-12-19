@@ -2,14 +2,14 @@ const bcrypt = require('bcrypt');
 const USERS = require('../models/users');
 
 const login = async (req, res) => {
-    const {username, password} = req.body;
+    const {username, email, password} = req.body;
 
     if (username.length == 0 ) {
         res.json({success: false});
         return;
     };
 
-    const user = await USERS.findOne({username}).exec();
+    const user = await USERS.findOne({email}).exec();
     console.log(user);
     if (!user) {
         res.json({success: false});
@@ -27,7 +27,10 @@ const login = async (req, res) => {
     }
     req.session.authenticated = true;
     req.session.username = username;
-    res.json({success: true});
+    res.json({message:{
+        username: username,
+        position: user.position
+    },success: true});
 }
 
 module.exports = login;

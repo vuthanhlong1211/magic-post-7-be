@@ -54,13 +54,17 @@ app.use(session({
 
 // app.post('/login', login);
 
-app.post('/staff/create-gathering-point', createGatheringPoint)
+app.post('/leader/create-gathering-point', createGatheringPoint)
 
-app.post('/staff/create-delivery-point', createDeliveryPoint)
+app.post('/leader/create-delivery-point', createDeliveryPoint)
 
 app.post('/leader/create-manager', createManager);
 
+app.get('/users', getUser);
+
 app.post('/manager/create-staff', createStaff)
+
+app.get('/users/location', getUserByLocation)
 
 // app.get('/roomlist', ensureAuthenticated, getRoomList);
 

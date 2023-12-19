@@ -14,7 +14,10 @@ const createGatheringPoint = async (req, res) => {
         console.log(err);
         return res.json({message: err})
     }
-    
+}
+
+const getGatheringPoint = async (req, res) => {
+
 }
 
 module.exports = {createGatheringPoint};

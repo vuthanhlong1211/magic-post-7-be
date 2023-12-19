@@ -20,4 +20,13 @@ const createDeliveryPoint = async (req, res) => {
     
 }
 
+const getDeliveryPoint = async (req, res) => {
+    const deliveryPointList = await DELIVERYPOINTS.find();
+    let deliveryPointNameList = [];
+
+    res.json({message: {
+        "name": deliveryPointList
+    }})
+}
+
 module.exports = {createDeliveryPoint};

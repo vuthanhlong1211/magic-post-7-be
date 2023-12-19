@@ -8,11 +8,11 @@ const createUser = async (username, password, email, name, position) => {
     //causing error
     // const hashedPassword = await hashPassword(password);
     
-    // await USERS.create({username, password: hashedPassword, email, name, position});
+
     const createdUser = await USERS.create({
         username: username,
         password: password,
-        email: email,
+        email: email,//change to hashedPassword
         name: name,
         position: position});
 
@@ -174,6 +174,21 @@ const assignStaff = async (user, location) => {
             console.log("Failed staff assignment to selected delivery point");
         }
     } 
+}
+
+//return all users
+const getUser = async (req, res) => {
+
+}
+
+//return all users from a gathering point or a delivery point
+const getUserByLocationName = async (req, res) =>{
+    const name = req.body;
+
+}
+
+const deleteUser = async (req, res) => {
+    const {username} = req.body;
 }
 
 module.exports = {createManager, createStaff};
