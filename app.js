@@ -5,10 +5,12 @@ const io = require('socket.io')(http);
 const path = require('path');
 const express = require('express');
 const session = require('express-session');
-const {makeid} = require('./server/utils/utils');
-const login = require('./server/controllers/auth');
-const createUser = require('./server/controllers/users');
-const checkAuth = require('./server/middlewares/auth');
+const {makeSessionId} = require('./server/utils/utils');
+const {login} = require('./server/controllers/auth');
+const {createManager, createStaff} = require('./server/controllers/users');
+const {createDeliveryPoint} = require('./server/controllers/deliveryPoints');
+const {createGatheringPoint} = require('./server/controllers/gatheringPoints');
+const ensureAuthenticated = require('./server/middlewares/auth');
 const { getRoomList } = require('./server/controllers/rooms');
 
 require('dotenv').config();
@@ -19,7 +21,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
-  secret: makeid(12),
+  secret: makeSessionId(12),
   resave: false,
   saveUninitialized: true,
   cookie: {maxAge: oneDay}
@@ -34,23 +36,37 @@ app.use(session({
   }
 })();
 
-app.get('/', (req, res) => {
-  res.redirect('/login');
-});
+//redirect to the homepage of the system
+// app.get('/', (req, res) => {
+//   res.redirect('/homepage');
+// });
 
-app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/views/signup_login.html'));
-});
+//open the html file of the homepage
+// app.get('/homepage', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'public/views/homepage.html'))
+// })
 
-app.post('/login', login);
+//open the html file of the login interface
+// app.get('/login', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'public/views/login.html'));
+// });
 
-app.post('/signup', createUser);
 
-app.get('/roomlist', checkAuth, getRoomList);
+// app.post('/login', login);
 
-app.get('/dashboard', checkAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/views', 'index.html'));
-});
+app.post('/staff/create-gathering-point', createGatheringPoint)
+
+app.post('/staff/create-delivery-point', createDeliveryPoint)
+
+app.post('/leader/create-manager', createManager);
+
+app.post('/manager/create-staff', createStaff)
+
+// app.get('/roomlist', ensureAuthenticated, getRoomList);
+
+// app.get('/dashboard', ensureAuthenticated, (req, res) => {
+//   res.sendFile(path.join(__dirname, 'public/views', 'index.html'));
+// });
 
 // Đăng ký các sự kiện của socket
 require('./server/controllers/socket')(io)
