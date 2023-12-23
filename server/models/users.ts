@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 const Schema = mongoose.Schema;
 
 //User accounts are for staff only,
@@ -32,5 +33,6 @@ const userSchema = new Schema({
         "Giao dịch viên"]
     },
 });
+
 const USERS = mongoose.model('User', userSchema);
-module.exports = USERS;
+export default USERS;

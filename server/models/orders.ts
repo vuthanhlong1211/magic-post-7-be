@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 //orders sent from sender to receiver, both are customers
@@ -55,7 +55,7 @@ const orderSchema = new Schema({
     // members: [mongoose.Types.ObjectId],
     type: {
         type: String,
-        enum: ['Tài liệu', 'Hàng hóa'],
+        enum: ['Tài liệu','Hàng hóa'],
         required: true
     },
     content:[
@@ -76,9 +76,6 @@ const orderSchema = new Schema({
         }
     ]
     ,
-    specialService: {
-        type: String
-    },
     instructionOnFailedDelivery:{
         type: String,
         enum: ['Chuyển hoàn ngay',
@@ -94,30 +91,32 @@ const orderSchema = new Schema({
     //add space for sender's signature
     fee: 
         {
-            mainFee:{
-                type: Number,
-                required: true
-            },
-            additionalFee:{
-                type: Number,
-                required: true
-            },
-            transportFee: {
-                type: Number,
-                required: true
-            },
-            totalFee:{
-                type: Number,
-                required: true
-            },
-            others:{
-                type: Number,
-                required: true
-            },
-            totalCost:{
-                type: Number,
-                required: true
-            }
+            type: Number,
+            required: true
+            // mainFee:{
+            //     type: Number,
+            //     required: true
+            // },
+            // additionalFee:{
+            //     type: Number,
+            //     required: true
+            // },
+            // transportFee: {
+            //     type: Number,
+            //     required: true
+            // },
+            // totalFee:{
+            //     type: Number,
+            //     required: true
+            // },
+            // others:{
+            //     type: Number,
+            //     required: true
+            // },
+            // totalCost:{
+            //     type: Number,
+            //     required: true
+            // }
         }
     ,
     weight: 
@@ -134,18 +133,20 @@ const orderSchema = new Schema({
     ,
     receiverCharge: 
         {
-            COD:{
-                type: Number,
-                required: true
-            },
-            others:{
-                type: Number,
-                required: true
-            },
-            total:{
-                type: Number,
-                required: true
-            }
+            type: Number,
+            required: true
+            // COD:{
+            //     type: Number,
+            //     required: true
+            // },
+            // others:{
+            //     type: Number,
+            //     required: true
+            // },
+            // total:{
+            //     type: Number,
+            //     required: true
+            // }
         }
     ,
     businessNote:{
@@ -178,4 +179,4 @@ const orderSchema = new Schema({
     }
 });
 const ORDERS = mongoose.model('Order', orderSchema);
-module.exports = ORDERS;
+export default ORDERS;

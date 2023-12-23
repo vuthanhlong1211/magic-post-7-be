@@ -1,10 +1,11 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-const deliveryPointSchema = new Schema({
+const gatheringPointSchema = new Schema({
     name: {
         type: String,
         required: true,
+        unique: true
     },
     location: {
         type: String,
@@ -17,13 +18,9 @@ const deliveryPointSchema = new Schema({
     staffs:{
         type:[mongoose.Schema.Types.ObjectId], ref:"User",
     },
-    gatheringPoint:{
-        type:mongoose.Schema.Types.ObjectId, ref:'Gathering Point',
-        required: true
-    },
     orders:{
         type:[mongoose.Schema.Types.ObjectId], ref:"Order",
     }
 });
-const DELIVERYPOINTS = mongoose.model('Delivery Point', deliveryPointSchema);
-module.exports = DELIVERYPOINTS;
+const GATHERINGPOINTS = mongoose.model('Gathering Point', gatheringPointSchema);
+export default GATHERINGPOINTS;

@@ -1,6 +1,6 @@
-const bcrypt = require('bcrypt');
+import bcrypt from 'bcrypt';
 
-const makeSessionId = (length) => {
+const makeSessionId = (length: number) => {
     var text = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   
@@ -11,19 +11,19 @@ const makeSessionId = (length) => {
 }
 
 //causing error
-const hashPassword = async (password) => {
+const hashPassword = async (password: string) => {
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);
   return hash;
 };
 
 //might need to fit company's domain
-const validateEmail = (email) => {
+const validateEmail = (email: string) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
 
-const validatePassword = (password) => {
+const validatePassword = (password: string) => {
   // Password should be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[~`!@#$%^&*-_+=;"`,.])[A-Za-z\~`!@#$%^&*-_+="`,.]{8,}$/;
   return passwordRegex.test(password);
@@ -54,9 +54,22 @@ const generateSecurePassword = () => {
   return generatedPassword;
 }
 
-function getRandomChar(characterSet) {
+function getRandomChar(characterSet: string) {
   const randomIndex = Math.floor(Math.random() * characterSet.length);
   return characterSet.charAt(randomIndex);
 }
 
-module.exports = {makeSessionId, hashPassword, validateEmail, validatePassword, generateSecurePassword};
+function getErrorMessage(error: unknown) {
+  if (error instanceof Error) return error.message;
+  return String(error);
+}
+
+enum Position {
+  Leader = "Lãnh đạo",
+  GatheringPointManager = "Trưởng điểm tập kết",
+  DeliveryPointManager = "Trưởng điểm giao dịch",
+  GatheringPointStaff = "Nhân viên điểm tập kết",
+  DeliveryPointStaff = "Giao dịch viên"
+}
+
+export {makeSessionId, hashPassword, validateEmail, validatePassword, generateSecurePassword, Position, getErrorMessage};
