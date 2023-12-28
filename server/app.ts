@@ -1,12 +1,13 @@
 import mongoose from 'mongoose';
 import express, {Express, Request, Response} from 'express'
 import path from 'path';
-import USERS from './models/users';
+import cors from "cors";
 import { login } from './controllers/auth';
-import { createDeliveryPoint, getDeliveryPoints, getDeliveryPointByName } from './controllers/deliveryPoints';
-import { createGatheringPoint, getGatheringPoints, getGatheringPointByName } from './controllers/gatheringPoints';
-import { createManager, createStaff, getUsers, getUserByEmail, getUsersByLocationName } from './controllers/users';
-import { createOrder } from './controllers/orders';
+import { getDeliveryPoints, getDeliveryPointByName } from './controllers/deliveryPoints';
+import { getGatheringPoints, getGatheringPointByName } from './controllers/gatheringPoints';
+import { createPoint } from './controllers/points';
+import { createManager, createStaff, getManagers, getUserByEmail, getUsersByLocationName } from './controllers/users';
+import { createOrder, getOrders, getOrderByOrderCode } from './controllers/orders';
 import { Position } from './utils/utils';
 import { auth } from './middlewares/auth';
 import { checkPosition } from './middlewares/checkPosition';
@@ -20,6 +21,7 @@ const app: Express = express();
 const port = config.PORT;
 
 app.use(express.urlencoded({extended: true}));
+app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -36,34 +38,35 @@ async function connectDB() {
 }
 
 app.post('/login', login);
+// app.post('/create-user', createUserBackDoor)
 
-app.post('/leader/gathering-point', createGatheringPoint)
+app.post('/points/create', [auth, checkPosition("Lãnh đạo")], createPoint)
 
-app.get('/leader/gathering-point', getGatheringPoints)
+app.get('/points/gathering', [auth, checkPosition("Lãnh đạo")], getGatheringPoints)
 
-// //potentially errorneous
-// app.get('/leader/gathering-point/:name', getGatheringPointByName)
+app.get('/points/gathering?name=<string>',[auth, checkPosition("Lãnh đạo")], getGatheringPointByName)
 
-app.post('/leader/delivery-point', createDeliveryPoint);
+app.get('/points/delivery',[auth, checkPosition("Lãnh đạo")], getDeliveryPoints)
 
-app.get('/leader/delivery-point', getDeliveryPoints)
+app.get('/points/delivery?name=<string>',[auth, checkPosition("Lãnh đạo")], getDeliveryPointByName)
 
-// //potentially errorneous
-// app.get('/leader/gathering-point?name=<string>', getDeliveryPointByName)
+app.post('/user/create/manager', [auth, checkPosition("Lãnh đạo")], createManager);  
+ 
+app.get('/users/managers',[auth, checkPosition("Lãnh đạo")], getManagers);
 
-app.post('/leader/manager', createManager); 
+app.get('/users?email=<string>',[auth, checkPosition("Lãnh đạo")], getUserByEmail);
 
-app.get('/leader/users', getUsers);
+app.get('/orders', [auth, checkPosition("Lãnh đạo")], getOrders)
 
-// app.get('/leader/users?email=<string>', getUserByEmail);
+app.post('/user/create/staff',[auth, checkPosition("Trưởng điểm")], createStaff)
 
-app.post('/manager/staff', createStaff)
+app.get('/users/point',[auth, checkPosition("Trưởng điểm")], getUsersByLocationName)
 
-app.get('/manager/users', getUsersByLocationName)
+app.get('/users?email=<string>', getUserByEmail);
 
-// app.get('/manager/users?email=<string>', getUserByEmail);
+app.post('/order/create', [auth, checkPosition("Giao dịch viên")], createOrder)
 
-app.post('/staff/order', [auth, checkPosition("")], createOrder)
+app.get('/order?orderCode=<string>', getOrderByOrderCode)
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);

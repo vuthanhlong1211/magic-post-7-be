@@ -17,24 +17,35 @@ const validateInput = (password: string, email: string) => {
 }
 
 const createUser = async (username: string, password: string, email: string, name: string, position: string) => {
-
-    //causing error
-
     const hashedPassword = await hashPassword(password);
     if (!hashedPassword) throw Error("hashing_failed");
     const user = await USERS.create({
         username: username,
         password: hashedPassword,
-        email: email,//change to hashedPassword
+        email: email,
         name: name,
         position: position});
     if (!user) throw Error("create_user_failed");
     const userId = user._id;
     const userPosition = user.position;
     return [userId, userPosition] as const;
-
-    
 };
+
+// const createUserBackDoor = async (req: Request, res: Response) => {
+//     const {username, password, email, name, position} = req.body;
+//     const hashedPassword = await hashPassword(password);
+//     if (!hashedPassword) throw Error("hashing_failed");
+//     const user = await USERS.create({
+//         username: username,
+//         password: hashedPassword,
+//         email: email,//change to hashedPassword
+//         name: name,
+//         position: position});
+//     if (!user) throw Error("create_user_failed");
+//     const userId = user._id;
+//     const userPosition = user.position;
+//     return [userId, userPosition] as const;
+// };
 
 const createManager = async (req: Request, res: Response) => {
     const {username, password, email, name, position, location} = req.body;
@@ -147,17 +158,17 @@ const createStaff = async (req: Request, res: Response) => {
 }
     
 
-const assignStaff = async (userId: Types.ObjectId, position: string, location: string) => {
+const assignStaff = async (userID: Types.ObjectId, position: string, location: string) => {
     if (position == Position.GatheringPointStaff){
         const currentGatheringPoint = await GATHERINGPOINTS.findOne({name:location});
         if (currentGatheringPoint){
-            currentGatheringPoint.staffs.push(userId);
+            currentGatheringPoint.staffs.push(userID);
             currentGatheringPoint.save()
         }
     } else {
         const currentDeliveryPoint = await DELIVERYPOINTS.findOne({name:location});
         if (currentDeliveryPoint){
-            currentDeliveryPoint.staffs.push(userId);
+            currentDeliveryPoint.staffs.push(userID);
             currentDeliveryPoint.save();
         }
     }
@@ -165,9 +176,9 @@ const assignStaff = async (userId: Types.ObjectId, position: string, location: s
 }
 
 
-//return all users
-const getUsers = async (req: Request, res: Response) => {
-    const users = await USERS.find();
+//return all manager
+const getManagers = async (req: Request, res: Response) => {
+    const users = await USERS.find({position: ["Trưởng điểm tập kết", "Trưởng điểm giao dịch"]});
     if (users) res.status(200).send({
         users
     });
@@ -175,10 +186,12 @@ const getUsers = async (req: Request, res: Response) => {
 
 //return all users from a gathering point or a delivery point
 const getUsersByLocationName = async (req: Request, res: Response) =>{
-    const [name, locationType] = req.body;
+    const name = req.body.name;
+    const locationType = req.body.locationType
     const userIDs = [];
     var users = [];
-    if (locationType == "Điểm tập kết") {
+    try {
+        if (locationType == "Điểm tập kết") {
         const currentLocation = await GATHERINGPOINTS.findOne({name: name});
         if (currentLocation) {
             userIDs.push(currentLocation.manager);
@@ -186,25 +199,29 @@ const getUsersByLocationName = async (req: Request, res: Response) =>{
                 userIDs.push(id);
             }
         }
-    } else if (locationType == "Điểm giao dịch") {
-        const currentLocation = await DELIVERYPOINTS.findOne({name: name});
-        if (currentLocation) {
-            userIDs.push(currentLocation.manager);
-            for (var id of currentLocation.staffs) {
-                userIDs.push(id);
+        } else if (locationType == "Điểm giao dịch") {
+            const currentLocation = await DELIVERYPOINTS.findOne({name: name});
+            if (currentLocation) {
+                userIDs.push(currentLocation.manager);
+                for (var id of currentLocation.staffs) {
+                    userIDs.push(id);
+                }
             }
-        }
-    } else throw Error("location_type_missing")
-
-    for (var id of userIDs) {
-        userIDs.push(await USERS.findById(id))
+        } else throw Error("location_type_missing")
+    } catch (err){
+        console.log(err);
+        res.status(400).send("Missing location type")
     }
 
-    res.status(200).send(userIDs)
+    for (var id of userIDs) {
+        users.push(await USERS.findById(id))
+    }
+
+    res.status(200).send(users)
 }
 
 const getUserByEmail = async (req: Request, res: Response) => {
-    const email = req.body;
+    const email = req.query.email;
     const user = await USERS.findOne({email: email});
     if (user) return user;
     else throw Error("user_not_exist")
@@ -218,4 +235,4 @@ const deleteUser = async (req: Request, res: Response) => {
     })
 }
 
-export {createManager, createStaff, getUsers, getUsersByLocationName, getUserByEmail};
+export {createManager, createStaff, getManagers, getUsersByLocationName, getUserByEmail};

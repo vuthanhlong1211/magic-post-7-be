@@ -4,11 +4,14 @@ import { CustomRequest } from "./auth";
 
 export const checkPosition = (requiredPosition: string) => {
     return (req: Request, res: Response, next: NextFunction) => {
-        const position = (req as CustomRequest).position;
+        let position = (req as CustomRequest).position;
+
+        if (requiredPosition == "Trưởng điểm") {
+            position = position.slice(0, 11)
+        }
 
         if (position == requiredPosition){
             (req as CustomRequest).position = position;
-            res.sendStatus(200).send("Authorized")
             next()
         } else {
             res.status(401).send("Unauthorized");

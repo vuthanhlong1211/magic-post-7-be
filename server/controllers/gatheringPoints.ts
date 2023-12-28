@@ -4,12 +4,10 @@ import { Request, Response } from 'express';
 const createGatheringPoint = async (req: Request, res: Response) => {
     try{
         const {name, location} = req.body;
-
         await GATHERINGPOINTS.create({
             name: name,
             location: location
         })
-
         return res.json({message: "gatheringpoint_created"})
     } catch (err){
         console.log(err);
@@ -23,7 +21,7 @@ const getGatheringPoints = async (req: Request, res: Response) => {
 }
 
 const getGatheringPointByName = async (req: Request, res: Response) => {
-    const name = req.body;
+    const name = req.params.name;
     return await GATHERINGPOINTS.findOne({name: name});
 }
 

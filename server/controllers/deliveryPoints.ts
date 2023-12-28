@@ -6,7 +6,7 @@ const createDeliveryPoint = async (req: Request, res: Response) => {
     const {name, location, gatheringPoint} = req.body;
     //gatheringPoint is gatheringPoint.name
     try {
-        await GATHERINGPOINTS.findOne({name: gatheringPoint}).select('_id').then(async (_id) => {
+        GATHERINGPOINTS.findOne({name: gatheringPoint}).select('_id').then(async (_id) => {
             await DELIVERYPOINTS.create({
                 name: name,
                 location: location,
@@ -28,8 +28,8 @@ const getDeliveryPoints = async (req: Request, res: Response) => {
 
 
 const getDeliveryPointByName = async (req: Request, res: Response) => {
-    const name = req.body;
+    const name = req.params.name;
     return await DELIVERYPOINTS.findOne({name: name})
 }
 
-export {createDeliveryPoint, getDeliveryPoints, getDeliveryPointByName};
+export { getDeliveryPoints, getDeliveryPointByName};

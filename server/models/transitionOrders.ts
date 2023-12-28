@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 //transition orders to move customers' orders between two locations
 
@@ -15,7 +15,13 @@ const transitionOrderSchema = new Schema({
     orders:{
         type:mongoose.Schema.Types.ObjectId, ref:"Order",
         required: true
+    },
+    status:{
+        type: String,
+        required: true,
+        enum: ["Đang chuyển", "Đã đến"]
     }
+
 });
 const GATHERINGPOINTS = mongoose.model('Gathering Point', transitionOrderSchema);
 module.exports = GATHERINGPOINTS;

@@ -125,6 +125,7 @@ const orderSchema = new Schema({
     //add space for receiving time and receiver's signature
     status:{
         type: String,
+        required: true,
         enum: ["Chờ lấy hàng", "Đang đi lấy",
         "Hủy", "Đang giao hàng", "Đã giao hàng",
         "Chuyển hoàn", "Chờ chuyển hoàn", "Không gặp khách"],

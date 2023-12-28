@@ -6,13 +6,12 @@ import { SECRET_KEY } from '../middlewares/auth';
 
 const login = async (req: Request, res: Response) => {
     const {email, password} = req.body;
-    if (!(email && password)) {
-        res.status(400).send();
+    if (email === undefined || password === undefined) {
+        return res.status(400).send();
       }
 
     if (email.length == 0 ) {
-        res.status(401).json({message: 'Authentication failed. Invalid Email',success: false});
-        return;
+        return res.status(401).json({message: 'Authentication failed. Invalid Email',success: false});
     };
 
     const user = await USERS.findOne({email: email})
@@ -33,6 +32,7 @@ const login = async (req: Request, res: Response) => {
         }
     }
 
+    console.log()
     res.status(200).send({token : jwt.sign({username: user.username, position: user.position}, SECRET_KEY, {
         expiresIn: '1 day'
     }), message:{
