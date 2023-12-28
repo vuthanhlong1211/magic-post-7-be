@@ -135,7 +135,7 @@ const createStaff = async (req: Request, res: Response) => {
         await createUser(username, password, email, name, position).then(async ([_id, position]) => {
             try {
                 await assignStaff(_id,position, location).then(() => {
-                    return res.status(201).send("manager_created")
+                    return res.status(201).send("staff_created")
                 });
             } catch (err) {
                 return res.status(500).send(getErrorMessage(err));
@@ -168,7 +168,9 @@ const assignStaff = async (userId: Types.ObjectId, position: string, location: s
 //return all users
 const getUsers = async (req: Request, res: Response) => {
     const users = await USERS.find();
-    if (users) return users;
+    if (users) res.status(200).send({
+        users
+    });
 }
 
 //return all users from a gathering point or a delivery point

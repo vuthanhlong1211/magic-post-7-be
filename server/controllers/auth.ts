@@ -5,7 +5,10 @@ import { Request, Response } from 'express';
 import { SECRET_KEY } from '../middlewares/auth';
 
 const login = async (req: Request, res: Response) => {
-    const {username, email, password} = req.body;
+    const {email, password} = req.body;
+    if (!(email && password)) {
+        res.status(400).send();
+      }
 
     if (email.length == 0 ) {
         res.status(401).json({message: 'Authentication failed. Invalid Email',success: false});
@@ -30,11 +33,10 @@ const login = async (req: Request, res: Response) => {
         }
     }
 
-
-    res.json({token : jwt.sign({username: username, position: user.position}, SECRET_KEY, {
+    res.status(200).send({token : jwt.sign({username: user.username, position: user.position}, SECRET_KEY, {
         expiresIn: '1 day'
     }), message:{
-        username: username,
+        username: user.username,
         position: user.position
     }, success: true});
 }
