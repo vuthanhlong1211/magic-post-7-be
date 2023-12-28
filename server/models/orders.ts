@@ -13,7 +13,7 @@ const orderSchema = new Schema({
                 type: String,
                 required: true
             },
-            senderPhonenumber:{
+            senderPhoneNumber:{
                 type: String,
                 required: true
             },
@@ -36,7 +36,7 @@ const orderSchema = new Schema({
                 type: String,
                 required: true
             },
-            receiverPhonenumber:{
+            receiverPhoneNumber:{
                 type: String,
                 required: true
             },
@@ -93,30 +93,6 @@ const orderSchema = new Schema({
         {
             type: Number,
             required: true
-            // mainFee:{
-            //     type: Number,
-            //     required: true
-            // },
-            // additionalFee:{
-            //     type: Number,
-            //     required: true
-            // },
-            // transportFee: {
-            //     type: Number,
-            //     required: true
-            // },
-            // totalFee:{
-            //     type: Number,
-            //     required: true
-            // },
-            // others:{
-            //     type: Number,
-            //     required: true
-            // },
-            // totalCost:{
-            //     type: Number,
-            //     required: true
-            // }
         }
     ,
     weight: 
@@ -135,18 +111,6 @@ const orderSchema = new Schema({
         {
             type: Number,
             required: true
-            // COD:{
-            //     type: Number,
-            //     required: true
-            // },
-            // others:{
-            //     type: Number,
-            //     required: true
-            // },
-            // total:{
-            //     type: Number,
-            //     required: true
-            // }
         }
     ,
     businessNote:{

@@ -35,7 +35,16 @@ const calculateDeliveryFee = (grossWeight: number): number => {
 const createOrder = async (req: Request, res: Response) => {
     //payment choice is either paid by sender or paid by receiver
     //paymentChoice:["sender", "receiver"]
-    const {sender, receiver, type, contents, instructionOnFailedDelivery, weight, paymentChoice} = req.body;
+    const sender = req.body.senderInfo;
+    const receiver = req.body.receiverInfo;
+    const type = req.body.type;
+    const contents = req.body.contents;
+    const instructionOnFailedDelivery = req.body.instructionOnFailedDelivery;
+    const weight = req.body.weight;
+    const paymentChoice = req.body.paymentChoice
+
+    // console.log(sender);
+    // console.log(receiver);
     //generate order code, and generate fee based on weight
     const orderCode = generateOrderCode();
     var fee = calculateDeliveryFee(weight.grossWeight);
@@ -45,11 +54,23 @@ const createOrder = async (req: Request, res: Response) => {
         fee = 0;
     }
     const currentUsername = (req as CustomRequest).username;
-    var currentUser = await USERS.findOne({username: currentUsername});
+    try {
+        var currentUser = await USERS.findOne({username: currentUsername});
     if (currentUser){
         const order = await ORDERS.create({
-            senderInfo: sender,
-            receiverInfo: receiver,
+            senderInfo: {
+                senderName: sender.senderName,
+                senderAddress: sender.senderAddress,
+                senderPhoneNumber: sender.senderPhoneNumber,
+                senderCode: sender.senderCode,
+                senderPostalCode: sender.senderPostalCode
+            },         
+            receiverInfo: {
+                receiverName: receiver.receiverName,
+                receiverAddress: receiver.receiverAddress,
+                receiverPhoneNumber: receiver.receiverPhoneNumber,
+                receiverPostalCode: receiver.receiverPostalCode
+            },
             orderCode: orderCode,
             type: type,
             contents: contents,
@@ -61,11 +82,15 @@ const createOrder = async (req: Request, res: Response) => {
             teller: currentUser._id,
             status: "Chờ lấy hàng"
         }).then(() => {
-                    console.log("Orders created");
-                    res.status(200).send("order_created")
+                    console.log("Order created")
+                    // res.status(200).send("order_created");
                 }
             )
     }
+    } catch (err){
+        console.log(err);
+    }
+    
 }
 
 //may be split into smaller functions
