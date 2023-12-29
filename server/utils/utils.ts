@@ -72,4 +72,20 @@ enum Position {
   DeliveryPointStaff = "Giao dịch viên"
 }
 
-export {makeSessionId, hashPassword, validateEmail, validatePassword, generateSecurePassword, Position, getErrorMessage};
+enum TransitionStatus {
+  Pending = "Đang chuyển",
+  Confirmed = "Đã đến"
+}
+
+enum OrderStatus {
+  Pending = "Chờ lấy hàng",
+  Transporting= "Đang đi lấy",
+  Canceled = "Hủy",
+  Delivering = "Đang giao hàng",
+  Delivered = "Đã giao hàng",
+  Returned ="Chuyển hoàn",
+  Returning = "Chờ chuyển hoàn",
+  NoReceiver = "Không gặp khách", 
+}
+
+export {makeSessionId, hashPassword, validateEmail, validatePassword, generateSecurePassword, Position, getErrorMessage, TransitionStatus, OrderStatus};

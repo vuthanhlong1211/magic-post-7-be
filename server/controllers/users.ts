@@ -80,7 +80,7 @@ const createManager = async (req: Request, res: Response) => {
                     return res.status(201).send("manager_created")
                 });
             } catch (err) {
-                return res.status(500).send(getErrorMessage(err));
+                return res.status(400).send(getErrorMessage(err));
             }
         });   
     } catch (err) {
@@ -191,6 +191,7 @@ const getUsersByLocationName = async (req: Request, res: Response) =>{
     const userIDs = [];
     var users = [];
     try {
+        //can use populate
         if (locationType == "Điểm tập kết") {
         const currentLocation = await GATHERINGPOINTS.findOne({name: name});
         if (currentLocation) {

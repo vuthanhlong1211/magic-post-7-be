@@ -32,8 +32,10 @@ const login = async (req: Request, res: Response) => {
         }
     }
 
-    console.log()
-    res.status(200).send({token : jwt.sign({username: user.username, position: user.position}, SECRET_KEY, {
+    res.status(200).send({token : jwt.sign({
+        username: user.username,
+        position: user.position,
+    }, SECRET_KEY, {
         expiresIn: '1 day'
     }), message:{
         username: user.username,

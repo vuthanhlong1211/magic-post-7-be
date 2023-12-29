@@ -26,3 +26,15 @@ export const createPoint = async (req: Request, res: Response) => {
             return res.sendStatus(400)
         }
 }
+
+export const getPointFromName = async (locationName: string, locationType: string) => {
+    let curLocation = null;
+    if (locationType = "Điểm giao dịch"){
+        curLocation = DELIVERYPOINTS.findOne({name: locationName});
+    } else if (locationType = "Điểm tập kết"){
+        curLocation = GATHERINGPOINTS.findOne({name: locationName});
+    } else throw new Error("invalid_location_type")
+
+    if (curLocation) return curLocation;
+    else throw new Error("location_find_failed")
+}

@@ -113,9 +113,6 @@ const orderSchema = new Schema({
             required: true
         }
     ,
-    businessNote:{
-        type: String
-    },
     //add space for teller's signature or delivery point's stamp
     //reference to account of a teller
     teller:{
@@ -129,19 +126,40 @@ const orderSchema = new Schema({
         enum: ["Chờ lấy hàng", "Đang đi lấy",
         "Hủy", "Đang giao hàng", "Đã giao hàng",
         "Chuyển hoàn", "Chờ chuyển hoàn", "Không gặp khách"],
-        logs: [
-            {
-                logTimestamp: {
-                    type: Date,
-                    required: true
-                },
-                logMessage: {
-                    type: String,
-                    required: true
-                }
+        
+    },
+    logs: [
+        {
+            logTimestamp: {
+                type: Date,
+            },
+            logMessage: {
+                type: String,
             }
-        ]
-    }
+        }
+    ],
+    transitionOrders: [
+        {
+            start:{
+                type: String,
+                required: true
+            },
+            end: {
+                type: String,
+                required: true
+            },
+            status:{
+                type: String,
+                required: true,
+                enum: ["Đang chuyển", "Đã đến"]
+            },
+            timestamp:{
+                type: Date,
+                required: true,
+                default: Date.now()
+            }
+        }
+    ]
 });
 const ORDERS = mongoose.model('Order', orderSchema);
 export default ORDERS;

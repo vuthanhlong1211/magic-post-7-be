@@ -6,8 +6,14 @@ import { login } from './controllers/auth';
 import { getDeliveryPoints, getDeliveryPointByName } from './controllers/deliveryPoints';
 import { getGatheringPoints, getGatheringPointByName } from './controllers/gatheringPoints';
 import { createPoint } from './controllers/points';
-import { createManager, createStaff, getManagers, getUserByEmail, getUsersByLocationName } from './controllers/users';
-import { createOrder, getOrders, getOrderByOrderCode } from './controllers/orders';
+import { createManager, createStaff,
+  getManagers, getUserByEmail,
+  getUsersByLocationName } from './controllers/users';
+import { createOrder, getOrders, 
+  getOrderByOrderCode, getOrdersByLocationName,
+  getSentOrdersByLocationName,
+  getReceivedOrdersByLocationName,
+  createTransitionOrder, confirmTransitionOrder} from './controllers/orders';
 import { Position } from './utils/utils';
 import { auth } from './middlewares/auth';
 import { checkPosition } from './middlewares/checkPosition';
@@ -40,33 +46,47 @@ async function connectDB() {
 app.post('/login', login);
 // app.post('/create-user', createUserBackDoor)
 
-app.post('/points/create', [auth, checkPosition("Lãnh đạo")], createPoint)
+//Leader
+app.post('/points/create', [auth, checkPosition(Position.Leader)], createPoint)
 
-app.get('/points/gathering', [auth, checkPosition("Lãnh đạo")], getGatheringPoints)
+app.get('/points/gathering', [auth, checkPosition(Position.Leader)], getGatheringPoints)
 
-app.get('/points/gathering?name=<string>',[auth, checkPosition("Lãnh đạo")], getGatheringPointByName)
+app.get('/points/gathering?name=<string>',[auth, checkPosition(Position.Leader)], getGatheringPointByName)
 
-app.get('/points/delivery',[auth, checkPosition("Lãnh đạo")], getDeliveryPoints)
+app.get('/points/delivery',[auth, checkPosition(Position.Leader)], getDeliveryPoints)
 
-app.get('/points/delivery?name=<string>',[auth, checkPosition("Lãnh đạo")], getDeliveryPointByName)
+app.get('/points/delivery?name=<string>',[auth, checkPosition(Position.Leader)], getDeliveryPointByName)
 
-app.post('/user/create/manager', [auth, checkPosition("Lãnh đạo")], createManager);  
+app.post('/user/create/manager', [auth, checkPosition(Position.Leader)], createManager);  
  
-app.get('/users/managers',[auth, checkPosition("Lãnh đạo")], getManagers);
+app.get('/users/managers',[auth, checkPosition(Position.Leader)], getManagers);
 
-app.get('/users?email=<string>',[auth, checkPosition("Lãnh đạo")], getUserByEmail);
+app.get('/users?email=<string>',[auth, checkPosition(Position.Leader)], getUserByEmail);
 
-app.get('/orders', [auth, checkPosition("Lãnh đạo")], getOrders)
+app.get('/orders', [auth, checkPosition(Position.Leader)], getOrders)
 
+//Managers
 app.post('/user/create/staff',[auth, checkPosition("Trưởng điểm")], createStaff)
 
 app.get('/users/point',[auth, checkPosition("Trưởng điểm")], getUsersByLocationName)
 
-app.get('/users?email=<string>', getUserByEmail);
+app.get('/orders', [auth, checkPosition("Trưởng điểm")], getOrdersByLocationName)
 
-app.post('/order/create', [auth, checkPosition("Giao dịch viên")], createOrder)
+app.get('/orders/sent', [auth, checkPosition("Trưởng điểm")], getSentOrdersByLocationName)
+
+app.get('/orders/received', [auth, checkPosition("Trưởng điểm")], getReceivedOrdersByLocationName)
+
+// app.get('/users?email=<string>', getUserByEmail);
+
+//Staffs
+app.post('/order/create', [auth, checkPosition(Position.DeliveryPointStaff)], createOrder)
 
 app.get('/order?orderCode=<string>', getOrderByOrderCode)
+
+app.post('/order/transition/create', [auth, checkPosition(Position.DeliveryPointStaff)], createTransitionOrder)
+
+app.post('/order/transition/create', [auth, checkPosition(Position.GatheringPointStaff)], createTransitionOrder)
+
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
