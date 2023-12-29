@@ -43,11 +43,14 @@ async function connectDB() {
     } 
 }
 
+//Public
+app.get('/order/:orderCode', getOrderByOrderCode)
+
 app.post('/login', login);
 // app.post('/create-user', createUserBackDoor)
 
 //Leader
-app.post('/points/create', [auth, checkPosition(Position.Leader)], createPoint)
+app.post('/point/create', [auth, checkPosition(Position.Leader)], createPoint)
 
 app.get('/points/gathering', [auth, checkPosition(Position.Leader)], getGatheringPoints)
 
@@ -81,12 +84,13 @@ app.get('/orders/received', [auth, checkPosition("Trưởng điểm")], getRecei
 //Staffs
 app.post('/order/create', [auth, checkPosition(Position.DeliveryPointStaff)], createOrder)
 
-app.get('/order?orderCode=<string>', getOrderByOrderCode)
-
 app.post('/order/transition/create', [auth, checkPosition(Position.DeliveryPointStaff)], createTransitionOrder)
 
 app.post('/order/transition/create', [auth, checkPosition(Position.GatheringPointStaff)], createTransitionOrder)
 
+app.patch('/order/transition/:orderCode/confirm', [auth, checkPosition(Position.DeliveryPointStaff)], confirmTransitionOrder)
+
+app.patch('/order/transition/:orderCode/confirm', [auth, checkPosition(Position.GatheringPointStaff)], confirmTransitionOrder)
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);

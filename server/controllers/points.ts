@@ -3,7 +3,7 @@ import GATHERINGPOINTS from "../models/gatheringPoints";
 import DELIVERYPOINTS from "../models/deliveryPoints";
 
 export const createPoint = async (req: Request, res: Response) => {
-    const [name, location, gatheringPointName] = req.body;
+    const {name, location, gatheringPointName} = req.body;
   try{
     if (gatheringPointName === undefined) {
             await GATHERINGPOINTS.create({

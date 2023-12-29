@@ -128,16 +128,10 @@ const orderSchema = new Schema({
         "Chuyển hoàn", "Chờ chuyển hoàn", "Không gặp khách"],
         
     },
-    logs: [
-        {
-            logTimestamp: {
-                type: Date,
-            },
-            logMessage: {
-                type: String,
-            }
-        }
-    ],
+    logs: {
+        type:[String]
+    }  
+    ,
     transitionOrders: [
         {
             start:{

@@ -92,14 +92,15 @@ const createOrder = async (req: Request, res: Response) => {
             }
             let orderID = order._id;
             assignOrder(order._id, deliveryPointName).then(() => {
-                console.log("Order created")
-                res.status(200).send("order_created");
+                const message = order.timestamp.toString().substring(0, 23) + " Đơn hàng nhận tại điểm giao dịch " + deliveryPointName;
+                console.log(message); order.logs.push(message);
+                order.save();
+                res.status(200).send(order.orderCode);
             })
         }
     } catch (err) {
         console.log(err);
     }
-
 }
 
 const assignOrder = async (orderID: Types.ObjectId, deliveryPointName: string) => {
@@ -145,7 +146,7 @@ const createTransitionOrder = async (req: Request, res: Response) => {
 
 const confirmTransitionOrder = async (req: Request, res: Response) => {
     try {
-        const orderCode = req.body.orderCode;
+        const orderCode = req.params.orderCode;
         const locationName = req.body.locationName;
         const locationType = req.body.locationType;
         const order = await ORDERS.findOne({ orderCode: orderCode });
@@ -158,12 +159,19 @@ const confirmTransitionOrder = async (req: Request, res: Response) => {
                     throw new Error("order_not_found_at_location")
                 } else {
                     await updateOrderStatus(orderCode, OrderStatus.Transporting);
-                    order.transitionOrders[order.transitionOrders.length - 1].status = TransitionStatus.Confirmed;
+                    const lastTransitionOrder = order.transitionOrders[order.transitionOrders.length - 1]
+                    lastTransitionOrder.status = TransitionStatus.Confirmed;
+                    const date = new Date();
+                    const message = date.toString().substring(0, 23) + " Đơn hàng chuyển từ " + lastTransitionOrder.start + " tới " + lastTransitionOrder.end;
+                    console.log(message);
+                    order.logs.push(message);
+                    order.save()
+                    res.status(200).send("transition_order_confirmed")
                 }
             }
         } else throw new Error("order_find_failed")
     } catch (err) {
-        console.log(err)
+        res.sendStatus(400)
     }
 
 }
@@ -179,7 +187,7 @@ const updateOrderStatus = async (orderCode: string, status: OrderStatus) => {
         const order = await ORDERS.findOne({ orderCode: orderCode });
         if (order) {
             order.status = status;
-            order.save
+            order.save();
         } else throw new Error("order_find_failed")
     } catch (err) {
         console.log(err);
@@ -188,41 +196,53 @@ const updateOrderStatus = async (orderCode: string, status: OrderStatus) => {
 
 //push the id of the moved order into the orders field
 //of the end point
+const getStartAndEndPoint = async (orderCode: string, start: string, end: string) => {
+    let startPoint;
+    if (start.slice(0, 3) === "ĐGD") {
+        startPoint = await DELIVERYPOINTS.findOne({ name: start.slice(4) }).select('orders');
+    } else {
+        startPoint = await GATHERINGPOINTS.findOne({ name: start.slice(4) }).select('orders');
+    }
+
+    let endPoint;
+    if (end.slice(0, 3) === "ĐGD") {
+        endPoint = await DELIVERYPOINTS.findOne({ name: end.slice(4) }).select('orders');
+    } else if (end.slice(0, 3) === "ĐTK") {
+        endPoint = await GATHERINGPOINTS.findOne({ name: end.slice(4) }).select('orders');
+    } else if (end === "Khách hàng") { // to customer
+        updateOrderStatus(orderCode, OrderStatus.Delivering);
+    }
+
+    return { startPoint, endPoint }
+}
+
 const moveOrder = async (orderCode: string, start: string, end: string) => {
     try {
-        let startPoint = null;
-        if (start.slice(0, 3) === "ĐGD") {
-            startPoint = await DELIVERYPOINTS.findOne({ name: start }).select('orders');
-        } else {
-            startPoint = await GATHERINGPOINTS.findOne({ name: start }).select('orders');
-        }
-
-        let endPoint = null;
-        if (end.slice(0, 3) === "ĐGD") {
-            endPoint = await DELIVERYPOINTS.findOne({ name: start }).select('orders');
-        } else if (end.slice(0, 3) === "ĐTK") {
-            endPoint = await GATHERINGPOINTS.findOne({ name: start }).select('orders');
-        } else if (end === "Customer") { // to customer
-            updateOrderStatus(orderCode, OrderStatus.Delivering);
-        }
-
-        if (endPoint && startPoint) { //between points
-            const order = await ORDERS.findOne({ orderCode: orderCode }).select('_id');
-            if (order) {
-                const orderID = order._id
-                const index = startPoint.orders.indexOf(orderID, 0);
-                if (index == -1) {
-                    throw new Error("order_not_exist_at_start")
-                } else {
-                    endPoint.orders.push(orderID);
-
-                }
-            } else throw new Error("order_find_failed")
-        }
+        await getStartAndEndPoint(orderCode, start, end).then(async ({ startPoint, endPoint }) => {
+            console.log(startPoint)
+            console.log(endPoint)
+            if (endPoint && startPoint) { //between points
+                const order = await ORDERS.findOne({ orderCode: orderCode }).select('_id');
+                if (order) {
+                    const orderID = order._id
+                    const index = startPoint.orders.indexOf(orderID, 0);
+                    console.log(index)
+                    if (index == -1) {
+                        throw new Error("order_not_exist_at_start")
+                    } else {
+                        console.log(orderID)
+                        endPoint.orders.push(orderID);
+                        endPoint.save();
+                        console.log(endPoint.orders)
+                    }
+                } else throw new Error("order_find_failed")
+            }
+        })
     } catch (err) {
         console.log(err)
     }
 }
+
 
 
 
@@ -326,12 +346,14 @@ const getReceivedOrdersByLocationName = async (req: Request, res: Response) => {
 }
 
 const getOrderByOrderCode = async (req: Request, res: Response) => {
-    const orderCode = req.body.orderCode;
+    const orderCode = req.params.orderCode;
+    console.log(orderCode);
     try {
-        const order = await ORDERS.findOne({ orderCode: orderCode }).select('status');
-        if (order) return order;
+        const order = await ORDERS.findOne({ orderCode: orderCode }).select("status logs transitionOrders");
+        if (order) res.status(200).send(order);
+        else throw new Error("Order not found")
     } catch (err) {
-        console.log(err);
+        res.status(400).send(err);
     }
 }
 
