@@ -17,12 +17,14 @@ const createGatheringPoint = async (req: Request, res: Response) => {
 
 //get all gathering points in a list
 const getGatheringPoints = async (req: Request, res: Response) => {
-    return await GATHERINGPOINTS.find();
+    const gatheringPoints = await GATHERINGPOINTS.find()
+    return res.status(200).json(gatheringPoints);
 }
 
 const getGatheringPointByName = async (req: Request, res: Response) => {
     const name = req.params.name;
-    return await GATHERINGPOINTS.findOne({name: name});
+    const gatheringPoint =  await GATHERINGPOINTS.findOne({name: name})
+    return res.status(200).json(gatheringPoint);
 }
 
 export {createGatheringPoint, getGatheringPoints, getGatheringPointByName};

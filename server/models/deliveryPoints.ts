@@ -24,7 +24,10 @@ const deliveryPointSchema = new Schema({
     },
     orders:{
         type:[mongoose.Schema.Types.ObjectId], ref:"Order",
-    }
+    },
+    transitionOrders:{
+        type:[mongoose.Schema.Types.ObjectId], ref:"Transition Order",
+    },
 });
 const DELIVERYPOINTS = mongoose.model('Delivery Point', deliveryPointSchema);
 export default DELIVERYPOINTS;

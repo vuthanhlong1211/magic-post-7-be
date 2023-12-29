@@ -8,12 +8,14 @@ import { getGatheringPoints, getGatheringPointByName } from './controllers/gathe
 import { createPoint } from './controllers/points';
 import { createManager, createStaff,
   getManagers, getUserByEmail,
+  getUsers,
   getUsersByLocationName } from './controllers/users';
 import { createOrder, getOrders, 
   getOrderByOrderCode, getOrdersByLocationName,
   getSentOrdersByLocationName,
-  getReceivedOrdersByLocationName,
-  createTransitionOrder, confirmTransitionOrder} from './controllers/orders';
+  getReceivedOrdersByLocationName
+} from './controllers/orders';
+import {  createTransitionOrder, confirmTransitionOrder} from './controllers/transitionOrder'
 import { Position } from './utils/utils';
 import { auth } from './middlewares/auth';
 import { checkPosition } from './middlewares/checkPosition';
@@ -50,7 +52,7 @@ app.post('/api/login', login);
 // app.post('/create-user', createUserBackDoor)
 
 //Leader
-app.post('/protected/point/create', [auth, checkPosition(Position.Leader)], createPoint)
+app.post('/protected/points/create', [auth, checkPosition(Position.Leader)], createPoint)
 
 app.get('/protected/points/gathering', [auth, checkPosition(Position.Leader)], getGatheringPoints)
 
@@ -60,11 +62,15 @@ app.get('/protected/points/delivery',[auth, checkPosition(Position.Leader)], get
 
 // app.get('/protected/points/delivery?name=<string>',[auth, checkPosition(Position.Leader)], getDeliveryPointByName)
 
-app.post('/protected/user/create/manager', [auth, checkPosition(Position.Leader)], createManager);  
+app.post('/protected/user/create/manager', [auth, checkPosition(Position.Leader)], createManager);
+
+app.get('/protected/users',[auth, checkPosition(Position.Leader)], getUsers);
  
 app.get('/protected/users/managers',[auth, checkPosition(Position.Leader)], getManagers);
 
 app.get('/protected/users?email=<string>',[auth, checkPosition(Position.Leader)], getUserByEmail);
+
+
 
 app.get('/protected/orders', [auth, checkPosition(Position.Leader)], getOrders)
 

@@ -7,6 +7,7 @@ import { Request, Response } from "express"
 import { Types } from "mongoose";
 import { OrderStatus, TransitionStatus, getErrorMessage } from "../utils/utils";
 import { getPointFromName } from "./points";
+import TRANSITIONORDERS from "../models/transitionOrder";
 
 const generateOrderCode = (): string => {
     const currentDate = new Date();
@@ -95,7 +96,7 @@ const createOrder = async (req: Request, res: Response) => {
                 const message = order.timestamp.toString().substring(0, 23) + " Đơn hàng nhận tại điểm giao dịch " + deliveryPointName;
                 console.log(message); order.logs.push(message);
                 order.save();
-                res.status(201).send(order.orderCode);
+                res.status(201).json(order.orderCode);
             })
         }
     } catch (err) {
@@ -115,132 +116,7 @@ const assignOrder = async (orderID: Types.ObjectId, deliveryPointName: string) =
     }
 }
 
-//start and end are the names of destination, 
-//with format "ĐGD/ĐTK" + name 
-//if the end is "Customer", meaning a customer
-//, update order status to "Đang giao hàng"
-const createTransitionOrder = async (req: Request, res: Response) => {
-    const orderCode: String = req.body.orderCode;
-    const start: string = req.body.start;
-    const end: string = req.body.end;
-    try {
-        const order = await ORDERS.findOne({ orderCode: orderCode });
-        if (order) {
-            const transitionOrder = {
-                start: start,
-                end: end,
-                status: TransitionStatus.Pending,
-                timestamp: new Date()
-            }
-            order.transitionOrders.push(transitionOrder);
-            order.save();
-            moveOrder(order.orderCode, start, end);
-            return res.status(201).send("transition_order_created")
-        }
-    } catch (err) {
-        return res.status(400).send(getErrorMessage(err));
-    }
 
-}
-
-const confirmTransitionOrder = async (req: Request, res: Response) => {
-    try {
-        const orderCode = req.params.orderCode;
-        const locationName = req.body.locationName;
-        const locationType = req.body.locationType;
-        const order = await ORDERS.findOne({ orderCode: orderCode });
-        if (order) {
-            const orderID = order._id
-            const curLocation = await getPointFromName(locationName, locationType);
-            if (curLocation) {
-                const index = curLocation.orders.indexOf(orderID, 0);
-                if (index == -1) {
-                    throw new Error("order_not_found_at_location")
-                } else {
-                    await updateOrderStatus(orderCode, OrderStatus.Transporting);
-                    const lastTransitionOrder = order.transitionOrders[order.transitionOrders.length - 1]
-                    lastTransitionOrder.status = TransitionStatus.Confirmed;
-                    const date = new Date();
-                    const message = date.toString().substring(0, 23) + " Đơn hàng chuyển từ " + lastTransitionOrder.start + " tới " + lastTransitionOrder.end;
-                    console.log(message);
-                    order.logs.push(message);
-                    order.save()
-                    res.status(200).send("transition_order_confirmed")
-                }
-            }
-        } else throw new Error("order_find_failed")
-    } catch (err) {
-        res.status(400).send(err)
-    }
-
-}
-
-
-// //may be split into smaller functions
-// const updateOrder = async (messsage: string) => {
-
-// }
-
-const updateOrderStatus = async (orderCode: string, status: OrderStatus) => {
-    try {
-        const order = await ORDERS.findOne({ orderCode: orderCode });
-        if (order) {
-            order.status = status;
-            order.save();
-        } else throw new Error("order_find_failed")
-    } catch (err) {
-        console.log(err);
-    }
-}
-
-//push the id of the moved order into the orders field
-//of the end point
-const getStartAndEndPoint = async (orderCode: string, start: string, end: string) => {
-    let startPoint;
-    if (start.slice(0, 3) === "ĐGD") {
-        startPoint = await DELIVERYPOINTS.findOne({ name: start.slice(4) }).select('orders');
-    } else {
-        startPoint = await GATHERINGPOINTS.findOne({ name: start.slice(4) }).select('orders');
-    }
-
-    let endPoint;
-    if (end.slice(0, 3) === "ĐGD") {
-        endPoint = await DELIVERYPOINTS.findOne({ name: end.slice(4) }).select('orders');
-    } else if (end.slice(0, 3) === "ĐTK") {
-        endPoint = await GATHERINGPOINTS.findOne({ name: end.slice(4) }).select('orders');
-    } else if (end === "Khách hàng") { // to customer
-        updateOrderStatus(orderCode, OrderStatus.Delivering);
-    }
-
-    return { startPoint, endPoint }
-}
-
-const moveOrder = async (orderCode: string, start: string, end: string) => {
-    try {
-        await getStartAndEndPoint(orderCode, start, end).then(async ({ startPoint, endPoint }) => {
-            console.log(startPoint)
-            console.log(endPoint)
-            if (endPoint && startPoint) { //between points
-                const order = await ORDERS.findOne({ orderCode: orderCode }).select('_id');
-                if (order) {
-                    const orderID = order._id
-                    const index = startPoint.orders.indexOf(orderID, 0);
-                    console.log(index)
-                    if (index == -1) {
-                        throw new Error("order_not_exist_at_start")
-                    } else {
-                        console.log(orderID)
-                        endPoint.orders.push(orderID);
-                        endPoint.save();
-                        console.log(endPoint.orders)
-                    }
-                } else throw new Error("order_find_failed")
-            }
-        })
-    } catch (err) {
-        console.log(err)
-    }
-}
 
 
 
@@ -253,7 +129,7 @@ const moveOrder = async (orderCode: string, start: string, end: string) => {
 const getOrders = async (req: Request, res: Response) => {
     try {
         const orders = await ORDERS.find().select('status');
-        if (orders) res.status(200).send(orders);
+        if (orders) res.status(200).json(orders);
     } catch (err) {
         return res.status(400).send(getErrorMessage(err));
     }
@@ -272,10 +148,10 @@ const getOrdersByLocationName = async (req: Request, res: Response) => {
                 orderIDs.push(id);
             }
             for (var id of orderIDs) {
-                orders.push(await ORDERS.findById(id).select("status log transitionOrder"))
+                orders.push(await ORDERS.findById(id).select("status log"))
             }
 
-            res.status(200).send(orders)
+            res.status(200).json(orders)
         } else throw Error("location_type_missing")
     } catch (err) {
         console.log(err);
@@ -296,20 +172,34 @@ const getSentOrdersByLocationName = async (req: Request, res: Response) => {
             }
 
             for (var id of orderIDs) {
-                const order = await ORDERS.findById(id).select("status log transitionOrder")
+                const order = await ORDERS.findById(id).select("status log")
                 if (order) {
-                    for (var transitionOrder of order.transitionOrders) {
+                    const transitionOrders = await TRANSITIONORDERS.find({order: order._id})
+                    for (var transitionOrder of transitionOrders) {
                         if (transitionOrder.start.substring(4) == curLocation.name) {
                             sentOrders.push(order);
                             break;
                         }
                     }
                 }
-            } res.status(200).send(sentOrders)
+            } res.status(200).json(sentOrders)
         } else throw Error("location_type_missing")
     } catch (err) {
         console.log(err);
         res.status(400).send("Missing location type")
+    }
+}
+
+
+export const updateOrderStatus = async (orderCode: string, status: OrderStatus) => {
+    try {
+        const order = await ORDERS.findOne({ orderCode: orderCode });
+        if (order) {
+            order.status = status;
+            order.save();
+        } else throw new Error("order_find_failed")
+    } catch (err) {
+        console.log(err);
     }
 }
 
@@ -326,9 +216,10 @@ const getReceivedOrdersByLocationName = async (req: Request, res: Response) => {
             }
 
             for (var id of orderIDs) {
-                const order = await ORDERS.findById(id).select("status log transitionOrder")
+                const order = await ORDERS.findById(id).select("status log")
                 if (order) {
-                    for (var transitionOrder of order.transitionOrders) {
+                    const transitionOrders = await TRANSITIONORDERS.find({order: order._id})
+                    for (var transitionOrder of transitionOrders) {
                         if (transitionOrder.end.substring(4) == curLocation.name) {
                             receivedOrders.push(order);
                             break;
@@ -336,7 +227,7 @@ const getReceivedOrdersByLocationName = async (req: Request, res: Response) => {
                     }
                 }
             }
-            res.status(200).send(receivedOrders)
+            res.status(200).json(receivedOrders)
         } else throw Error("location_type_missing")
     } catch (err) {
         console.log(err);
@@ -348,7 +239,7 @@ const getOrderByOrderCode = async (req: Request, res: Response) => {
     const orderCode = req.params.orderCode;
     try {
         const order = await ORDERS.findOne({ orderCode: orderCode }).select("status logs transitionOrders -_id");
-        if (order) res.status(200).send(order);
+        if (order) res.status(200).json(order);
         else throw new Error("Order not found")
     } catch (err) {
         res.status(400).send(err);
@@ -357,7 +248,6 @@ const getOrderByOrderCode = async (req: Request, res: Response) => {
 export {
     createOrder, getOrders,
     getOrdersByLocationName, getOrderByOrderCode,
-    createTransitionOrder, confirmTransitionOrder,
     getSentOrdersByLocationName,
     getReceivedOrdersByLocationName
 }

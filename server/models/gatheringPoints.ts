@@ -20,7 +20,10 @@ const gatheringPointSchema = new Schema({
     },
     orders:{
         type:[mongoose.Schema.Types.ObjectId], ref:"Order",
-    }
+    },
+    transitionOrders:{
+        type:[mongoose.Schema.Types.ObjectId], ref:"Transition Order",
+    },
 });
 const GATHERINGPOINTS = mongoose.model('Gathering Point', gatheringPointSchema);
 export default GATHERINGPOINTS;

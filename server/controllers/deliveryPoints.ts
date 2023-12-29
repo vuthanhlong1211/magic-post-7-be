@@ -21,15 +21,16 @@ const createDeliveryPoint = async (req: Request, res: Response) => {
     
 }
 
-//get all gathering points
+//get all delivery points
 const getDeliveryPoints = async (req: Request, res: Response) => {
-    return await DELIVERYPOINTS.find();
+    const deliveryPoints = await DELIVERYPOINTS.find()
+    return res.status(200).json(deliveryPoints);
 }
-
 
 const getDeliveryPointByName = async (req: Request, res: Response) => {
     const name = req.params.name;
-    return await DELIVERYPOINTS.findOne({name: name})
+    const deliveryPoint =  await DELIVERYPOINTS.findOne({name: name})
+    return res.status(200).json(deliveryPoint);
 }
 
 export { getDeliveryPoints, getDeliveryPointByName};

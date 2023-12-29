@@ -176,10 +176,14 @@ const assignStaff = async (userID: Types.ObjectId, position: string, location: s
 }
 
 
+export const getUsers = async (req: Request, res: Response) => {
+    const users = await USERS.find();
+    if (users) res.status(200).json(users);
+}
 //return all manager
 const getManagers = async (req: Request, res: Response) => {
     const users = await USERS.find({position: ["Trưởng điểm tập kết", "Trưởng điểm giao dịch"]});
-    if (users) res.status(200).send({users});
+    if (users) res.status(200).json(users);
 }
 
 //return all users from a gathering point or a delivery point
@@ -216,13 +220,13 @@ const getUsersByLocationName = async (req: Request, res: Response) =>{
         users.push(await USERS.findById(id))
     }
 
-    res.status(200).send(users)
+    res.status(200).json(users)
 }
 
 const getUserByEmail = async (req: Request, res: Response) => {
     const email = req.query.email;
     const user = await USERS.findOne({email: email});
-    if (user) return user;
+    if (user) return res.status(200).json(user);
     else throw Error("user_not_exist")
 }
 
@@ -234,4 +238,4 @@ const deleteUser = async (req: Request, res: Response) => {
     })
 }
 
-export {createManager, createStaff, getManagers, getUsersByLocationName, getUserByEmail};
+export {createManager, createStaff, getManagers, getUsersByLocationName, getUserByEmail, deleteUser};

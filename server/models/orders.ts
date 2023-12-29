@@ -131,29 +131,6 @@ const orderSchema = new Schema({
     logs: {
         type:[String]
     }  
-    ,
-    transitionOrders: [
-        {
-            start:{
-                type: String,
-                required: true
-            },
-            end: {
-                type: String,
-                required: true
-            },
-            status:{
-                type: String,
-                required: true,
-                enum: ["Đang chuyển", "Đã đến"]
-            },
-            timestamp:{
-                type: Date,
-                required: true,
-                default: Date.now()
-            }
-        }
-    ]
 });
 const ORDERS = mongoose.model('Order', orderSchema);
 export default ORDERS;
