@@ -10,7 +10,7 @@ export const createPoint = async (req: Request, res: Response) => {
                 name: name,
                 location: location
             })
-            return res.sendStatus(200);
+            return res.status(201).send("gathering_point_created");
     } else {
         GATHERINGPOINTS.findOne({name: gatheringPointName}).select('_id').then(async (_id) => {
             DELIVERYPOINTS.create({
@@ -18,7 +18,7 @@ export const createPoint = async (req: Request, res: Response) => {
                 location: location,
                 gatheringPoint: _id
             }).then(() => {
-                return res.sendStatus(200)
+                return res.status(201).send("delivery_point_created")
             })
         })
     }} catch (err){

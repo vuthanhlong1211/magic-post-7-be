@@ -11,7 +11,7 @@ const login = async (req: Request, res: Response) => {
       }
 
     if (email.length == 0 ) {
-        return res.status(401).json({message: 'Authentication failed. Invalid Email',success: false});
+        return res.status(400).send({message: 'Authentication failed. Invalid Email',success: false});
     };
 
     const user = await USERS.findOne({email: email})

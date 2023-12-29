@@ -60,17 +60,17 @@ const createManager = async (req: Request, res: Response) => {
     try {
         validateInput(password, email)
     } catch (err) {
-        return res.status(500).send(getErrorMessage(err));
+        return res.status(400).send(getErrorMessage(err));
     }
     
     if (position != Position.DeliveryPointManager && position != Position.GatheringPointManager){
-        return res.status(500).send('position_invalid')
+        return res.status(400).send('position_invalid')
     }
 
     //Validate from database
     const userByEmail = await USERS.findOne({email});
     if (userByEmail) {
-        return res.status(500).send('email_unavailable');
+        return res.status(400).send('email_unavailable');
     }
 
     try {
@@ -84,7 +84,7 @@ const createManager = async (req: Request, res: Response) => {
             }
         });   
     } catch (err) {
-        return res.status(500).send(getErrorMessage(err));
+        return res.status(400).send(getErrorMessage(err));
     }
 }
     
@@ -129,17 +129,17 @@ const createStaff = async (req: Request, res: Response) => {
     try {
         validateInput(password, email)
     } catch (err) {
-        return res.status(500).send(getErrorMessage(err));
+        return res.status(400).send(getErrorMessage(err));
     }
     
     if (position != Position.DeliveryPointStaff && position != Position.GatheringPointStaff){
-        return res.status(500).send('position_invalid')
+        return res.status(400).send('position_invalid')
     }
 
     //Validate from database
     const userByEmail = await USERS.findOne({email});
     if (userByEmail) {
-        return res.status(500).send('email_unavailable');
+        return res.status(400).send('email_unavailable');
     }
 
     try {
@@ -149,11 +149,11 @@ const createStaff = async (req: Request, res: Response) => {
                     return res.status(201).send("staff_created")
                 });
             } catch (err) {
-                return res.status(500).send(getErrorMessage(err));
+                return res.status(400).send(getErrorMessage(err));
             }
         });   
     } catch (err) {
-        return res.status(500).send(getErrorMessage(err));
+        return res.status(400).send(getErrorMessage(err));
     }
 }
     
@@ -179,9 +179,7 @@ const assignStaff = async (userID: Types.ObjectId, position: string, location: s
 //return all manager
 const getManagers = async (req: Request, res: Response) => {
     const users = await USERS.find({position: ["Trưởng điểm tập kết", "Trưởng điểm giao dịch"]});
-    if (users) res.status(200).send({
-        users
-    });
+    if (users) res.status(200).send({users});
 }
 
 //return all users from a gathering point or a delivery point
@@ -232,7 +230,7 @@ const getUserByEmail = async (req: Request, res: Response) => {
 const deleteUser = async (req: Request, res: Response) => {
     const {email} = req.body;
     await USERS.findOneAndDelete({email: email}).then(() => {
-        res.status(204).send("user_deleted")
+        res.status(200).send("user_deleted")
     })
 }
 

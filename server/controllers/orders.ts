@@ -95,7 +95,7 @@ const createOrder = async (req: Request, res: Response) => {
                 const message = order.timestamp.toString().substring(0, 23) + " Đơn hàng nhận tại điểm giao dịch " + deliveryPointName;
                 console.log(message); order.logs.push(message);
                 order.save();
-                res.status(200).send(order.orderCode);
+                res.status(201).send(order.orderCode);
             })
         }
     } catch (err) {
@@ -123,7 +123,6 @@ const createTransitionOrder = async (req: Request, res: Response) => {
     const orderCode: String = req.body.orderCode;
     const start: string = req.body.start;
     const end: string = req.body.end;
-
     try {
         const order = await ORDERS.findOne({ orderCode: orderCode });
         if (order) {
@@ -136,7 +135,7 @@ const createTransitionOrder = async (req: Request, res: Response) => {
             order.transitionOrders.push(transitionOrder);
             order.save();
             moveOrder(order.orderCode, start, end);
-            return res.status(200).send("transition_order_created")
+            return res.status(201).send("transition_order_created")
         }
     } catch (err) {
         return res.status(400).send(getErrorMessage(err));
@@ -171,7 +170,7 @@ const confirmTransitionOrder = async (req: Request, res: Response) => {
             }
         } else throw new Error("order_find_failed")
     } catch (err) {
-        res.sendStatus(400)
+        res.status(400).send(err)
     }
 
 }
@@ -256,7 +255,7 @@ const getOrders = async (req: Request, res: Response) => {
         const orders = await ORDERS.find().select('status');
         if (orders) res.status(200).send(orders);
     } catch (err) {
-        console.log(err);
+        return res.status(400).send(getErrorMessage(err));
     }
 }
 
@@ -347,18 +346,14 @@ const getReceivedOrdersByLocationName = async (req: Request, res: Response) => {
 
 const getOrderByOrderCode = async (req: Request, res: Response) => {
     const orderCode = req.params.orderCode;
-    console.log(orderCode);
     try {
-        const order = await ORDERS.findOne({ orderCode: orderCode }).select("status logs transitionOrders");
+        const order = await ORDERS.findOne({ orderCode: orderCode }).select("status logs transitionOrders -_id");
         if (order) res.status(200).send(order);
         else throw new Error("Order not found")
     } catch (err) {
         res.status(400).send(err);
     }
 }
-
-//may need get function for sent and received orders
-
 export {
     createOrder, getOrders,
     getOrdersByLocationName, getOrderByOrderCode,

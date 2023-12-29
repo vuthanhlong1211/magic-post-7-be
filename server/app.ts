@@ -44,53 +44,60 @@ async function connectDB() {
 }
 
 //Public
-app.get('/order/:orderCode', getOrderByOrderCode)
+app.get('/api/order/:orderCode', getOrderByOrderCode)
 
-app.post('/login', login);
+app.post('/api/login', login);
 // app.post('/create-user', createUserBackDoor)
 
 //Leader
-app.post('/point/create', [auth, checkPosition(Position.Leader)], createPoint)
+app.post('/protected/point/create', [auth, checkPosition(Position.Leader)], createPoint)
 
-app.get('/points/gathering', [auth, checkPosition(Position.Leader)], getGatheringPoints)
+app.get('/protected/points/gathering', [auth, checkPosition(Position.Leader)], getGatheringPoints)
 
-app.get('/points/gathering?name=<string>',[auth, checkPosition(Position.Leader)], getGatheringPointByName)
+// app.get('/protected/points/gathering?name=<string>',[auth, checkPosition(Position.Leader)], getGatheringPointByName)
 
-app.get('/points/delivery',[auth, checkPosition(Position.Leader)], getDeliveryPoints)
+app.get('/protected/points/delivery',[auth, checkPosition(Position.Leader)], getDeliveryPoints)
 
-app.get('/points/delivery?name=<string>',[auth, checkPosition(Position.Leader)], getDeliveryPointByName)
+// app.get('/protected/points/delivery?name=<string>',[auth, checkPosition(Position.Leader)], getDeliveryPointByName)
 
-app.post('/user/create/manager', [auth, checkPosition(Position.Leader)], createManager);  
+app.post('/protected/user/create/manager', [auth, checkPosition(Position.Leader)], createManager);  
  
-app.get('/users/managers',[auth, checkPosition(Position.Leader)], getManagers);
+app.get('/protected/users/managers',[auth, checkPosition(Position.Leader)], getManagers);
 
-app.get('/users?email=<string>',[auth, checkPosition(Position.Leader)], getUserByEmail);
+app.get('/protected/users?email=<string>',[auth, checkPosition(Position.Leader)], getUserByEmail);
 
-app.get('/orders', [auth, checkPosition(Position.Leader)], getOrders)
+app.get('/protected/orders', [auth, checkPosition(Position.Leader)], getOrders)
+
+app.get('/protected/orders', [auth, checkPosition("Lãnh đạo")], getOrdersByLocationName)
+
+app.get('/protected/orders/sent', [auth, checkPosition("Lãnh đạo")], getSentOrdersByLocationName)
+
+app.get('/protected/orders/received', [auth, checkPosition("Lãnh đạo")], getReceivedOrdersByLocationName)
+
 
 //Managers
-app.post('/user/create/staff',[auth, checkPosition("Trưởng điểm")], createStaff)
+app.post('/protected/user/create/staff',[auth, checkPosition("Trưởng điểm")], createStaff)
 
-app.get('/users/point',[auth, checkPosition("Trưởng điểm")], getUsersByLocationName)
+app.get('/protected/users/point',[auth, checkPosition("Trưởng điểm")], getUsersByLocationName)
 
-app.get('/orders', [auth, checkPosition("Trưởng điểm")], getOrdersByLocationName)
+app.get('/protected/orders', [auth, checkPosition("Trưởng điểm")], getOrdersByLocationName)
 
-app.get('/orders/sent', [auth, checkPosition("Trưởng điểm")], getSentOrdersByLocationName)
+app.get('/protected/orders/sent', [auth, checkPosition("Trưởng điểm")], getSentOrdersByLocationName)
 
-app.get('/orders/received', [auth, checkPosition("Trưởng điểm")], getReceivedOrdersByLocationName)
+app.get('/protected/orders/received', [auth, checkPosition("Trưởng điểm")], getReceivedOrdersByLocationName)
 
 // app.get('/users?email=<string>', getUserByEmail);
 
 //Staffs
-app.post('/order/create', [auth, checkPosition(Position.DeliveryPointStaff)], createOrder)
+app.post('/protected/order/create', [auth, checkPosition(Position.DeliveryPointStaff)], createOrder)
 
-app.post('/order/transition/create', [auth, checkPosition(Position.DeliveryPointStaff)], createTransitionOrder)
+app.post('/protected/order/transition/create', [auth, checkPosition(Position.DeliveryPointStaff)], createTransitionOrder)
 
-app.post('/order/transition/create', [auth, checkPosition(Position.GatheringPointStaff)], createTransitionOrder)
+app.post('/protected/order/transition/create', [auth, checkPosition(Position.GatheringPointStaff)], createTransitionOrder)
 
-app.patch('/order/transition/:orderCode/confirm', [auth, checkPosition(Position.DeliveryPointStaff)], confirmTransitionOrder)
+app.patch('/protected/order/transition/:orderCode/confirm', [auth, checkPosition(Position.DeliveryPointStaff)], confirmTransitionOrder)
 
-app.patch('/order/transition/:orderCode/confirm', [auth, checkPosition(Position.GatheringPointStaff)], confirmTransitionOrder)
+app.patch('/protected/order/transition/:orderCode/confirm', [auth, checkPosition(Position.GatheringPointStaff)], confirmTransitionOrder)
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);

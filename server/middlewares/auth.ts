@@ -24,16 +24,13 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
    }
    (req as CustomRequest).token = decoded;
    (req as CustomRequest).username = (decoded as JwtPayload).username;
-   console.log( (req as CustomRequest).username);
    (req as CustomRequest).position = (decoded as JwtPayload).position;
-   console.log( (req as CustomRequest).position);
-
     next();
   } catch (err) {
     if (err == "missing_token"){
-      res.status(401).send('Please authenticate');
+      res.status(400).send('Please return token');
     } else {
-      res.status(403).send('Verification failed')
+      res.status(401).send('Verification failed')
     }
     
   }

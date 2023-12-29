@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 
 const createDeliveryPoint = async (req: Request, res: Response) => {
     const {name, location, gatheringPoint} = req.body;
-    //gatheringPoint is gatheringPoint.name
+    //dleiPoint is gatheringPoint.name
     try {
         GATHERINGPOINTS.findOne({name: gatheringPoint}).select('_id').then(async (_id) => {
             await DELIVERYPOINTS.create({
