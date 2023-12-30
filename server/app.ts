@@ -74,7 +74,7 @@ app.get('/protected/users?email=<string>',[auth, checkPosition(Position.Leader)]
 
 app.get('/protected/orders', [auth, checkPosition(Position.Leader)], getOrders)
 
-app.get('/protected/orders', [auth, checkPosition("Lãnh đạo")], getOrdersByLocationName)
+// app.get('/protected/orders', [auth, checkPosition("Lãnh đạo")], getOrdersByLocationName)
 
 app.get('/protected/orders/sent', [auth, checkPosition("Lãnh đạo")], getSentOrdersByLocationName)
 

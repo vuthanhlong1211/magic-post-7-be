@@ -6,7 +6,9 @@ const SECRET_KEY: Secret = "107686e6ae05b995de2a0513378dea7836b865832c9ce3ccf607
 interface CustomRequest extends Request {
   token: string | JwtPayload;
   username: string,
-  position: string
+  position: string,
+  location: string,
+  locationType: string
  }
 
 const auth = async (req: Request, res: Response, next: NextFunction) => {
@@ -25,6 +27,8 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
    (req as CustomRequest).token = decoded;
    (req as CustomRequest).username = (decoded as JwtPayload).username;
    (req as CustomRequest).position = (decoded as JwtPayload).position;
+   (req as CustomRequest).location = (decoded as JwtPayload).location;
+   (req as CustomRequest).locationType = (decoded as JwtPayload).locationType;
     next();
   } catch (err) {
     if (err == "missing_token"){

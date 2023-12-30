@@ -90,30 +90,39 @@ const createManager = async (req: Request, res: Response) => {
     
 
 const assignManager = async (userId: Types.ObjectId, position: string, location: string) => {
-    if (position == Position.GatheringPointManager){
-        const currentGatheringPoint = await GATHERINGPOINTS.findOne({name:location});
-        if (currentGatheringPoint){
-            if (currentGatheringPoint.manager){
-                throw Error("manager_existed");
+    try {
+            if (position == Position.GatheringPointManager){
+            const currentGatheringPoint = await GATHERINGPOINTS.findOne({name:location});
+            if (currentGatheringPoint){
+                if (currentGatheringPoint.manager){
+                    USERS.findByIdAndDelete({_id: userId}).then(()=>{
+                        throw new Error("manager_existed");
+                    })   
+                }
+                else {
+                    currentGatheringPoint.manager = userId;
+                    currentGatheringPoint.save()
+                }
             }
-            else {
-                currentGatheringPoint.manager = userId;
-                currentGatheringPoint.save()
+        } else {
+            const currentDeliveryPoint = await DELIVERYPOINTS.findOne({name:location});
+            if (currentDeliveryPoint){
+                if (currentDeliveryPoint.manager){
+                    USERS.findByIdAndDelete({_id: userId}).then(()=>{
+                        throw new Error("manager_existed");
+                    }) 
+                }
+                else {
+                    currentDeliveryPoint.manager = userId;
+                    currentDeliveryPoint.save()
+                }
             }
         }
-    } else {
-        const currentDeliveryPoint = await DELIVERYPOINTS.findOne({name:location});
-        if (currentDeliveryPoint){
-            if (currentDeliveryPoint.manager){
-                throw Error("manager_existed");
-            }
-            else {
-                currentDeliveryPoint.manager = userId;
-                currentDeliveryPoint.save()
-            }
-        }
+        return;
+    } catch (err) {
+        throw err;
     }
-    return;
+    
 }
 
 const createStaff = async (req: Request, res: Response) => {

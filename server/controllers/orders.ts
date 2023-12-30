@@ -41,8 +41,8 @@ const calculateDeliveryFee = (grossWeight: number): number => {
 const createOrder = async (req: Request, res: Response) => {
     //payment choice is either paid by sender or paid by receiver
     //paymentChoice:["sender", "receiver"]
-    const sender = req.body.senderInfo;
-    const receiver = req.body.receiverInfo;
+    const sender = req.body.sender;
+    const receiver = req.body.receiver;
     const type = req.body.type;
     const contents = req.body.contents;
     const instructionOnFailedDelivery = req.body.instructionOnFailedDelivery;
@@ -64,18 +64,19 @@ const createOrder = async (req: Request, res: Response) => {
         var currentUser = await USERS.findOne({ username: currentUsername });
         if (currentUser) {
             const order = await ORDERS.create({
-                senderInfo: {
-                    senderName: sender.senderName,
-                    senderAddress: sender.senderAddress,
-                    senderPhoneNumber: sender.senderPhoneNumber,
-                    senderCode: sender.senderCode,
-                    senderPostalCode: sender.senderPostalCode
+                sender: {
+                    name: sender.name,
+                    address: sender.address,
+                    phoneNumber: sender.phoneNumber,
+                    code: sender.code,
+                    postalCode: sender.postalCode
                 },
-                receiverInfo: {
-                    receiverName: receiver.receiverName,
-                    receiverAddress: receiver.receiverAddress,
-                    receiverPhoneNumber: receiver.receiverPhoneNumber,
-                    receiverPostalCode: receiver.receiverPostalCode
+                receiver: {
+                    name: receiver.name,
+                    address: receiver.address,
+                    phoneNumber: receiver.phoneNumber,
+                    code: receiver.code,
+                    postalCode: receiver.postalCode                
                 },
                 orderCode: orderCode,
                 type: type,

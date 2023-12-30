@@ -1,3 +1,4 @@
+import { CustomRequest } from "../middlewares/auth";
 import DELIVERYPOINTS from "../models/deliveryPoints";
 import GATHERINGPOINTS from "../models/gatheringPoints";
 import ORDERS from "../models/orders";
@@ -13,7 +14,15 @@ import { Request, Response } from "express";
 //, update order status to "Đang giao hàng"
 const createTransitionOrder = async (req: Request, res: Response) => {
     const orderCode = req.body.orderCode;
-    const start = req.body.start;
+    const startLocation = (req as CustomRequest).location;
+    const startLocationType = (req as CustomRequest).locationType;
+    var start: string = "";
+    if (startLocationType === "Điểm tập kết") {
+        start += "gathering "
+    } else if (startLocationType === "Điểm giao dịch") {
+        start += "delivery "
+    } 
+    start += startLocation
     const end = req.body.end;
     try {
         const order = await ORDERS.findOne({ orderCode: orderCode });
@@ -55,8 +64,8 @@ const confirmTransitionOrder = async (req: Request, res: Response) => {
                         lastTransitionOrder.status = TransitionStatus.Confirmed;
                         const date = new Date();
                         const message = date.toString().substring(0, 23) + " Đơn hàng chuyển từ " + lastTransitionOrder.start + " tới " + lastTransitionOrder.end;
-                        console.log(message);
                         order.logs.push(message);
+                        order.status = OrderStatus.Transporting;
                         order.save();
                         lastTransitionOrder.save();
                         res.status(200).send("transition_order_confirmed")
@@ -74,18 +83,18 @@ const confirmTransitionOrder = async (req: Request, res: Response) => {
 //of the end point
 const getStartAndEndPoint = async (orderCode: string, start: string, end: string) => {
     let startPoint;
-    if (start.slice(0, 3) === "ĐGD") {
-        startPoint = await DELIVERYPOINTS.findOne({ name: start.slice(4) }).select('orders');
-    } else {
-        startPoint = await GATHERINGPOINTS.findOne({ name: start.slice(4) }).select('orders');
+    if (start.slice(0, 8) === "delivery") {
+        startPoint = await DELIVERYPOINTS.findOne({ name: start.slice(9) }).select('orders');
+    } else if (start.slice(0, 9) === "gathering"){
+        startPoint = await GATHERINGPOINTS.findOne({ name: start.slice(10) }).select('orders');
     }
 
     let endPoint;
-    if (end.slice(0, 3) === "ĐGD") {
+    if (end.slice(0, 8) === "delivery") {
         endPoint = await DELIVERYPOINTS.findOne({ name: end.slice(4) }).select('orders');
-    } else if (end.slice(0, 3) === "ĐTK") {
+    } else if (end.slice(0, 9) === "gathering") {
         endPoint = await GATHERINGPOINTS.findOne({ name: end.slice(4) }).select('orders');
-    } else if (end === "Khách hàng") { // to customer
+    } else { // to customer
         updateOrderStatus(orderCode, OrderStatus.Delivering);
     }
 
