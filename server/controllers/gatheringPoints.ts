@@ -21,10 +21,15 @@ const getGatheringPoints = async (req: Request, res: Response) => {
     return res.status(200).json(gatheringPoints);
 }
 
+const getGatheringPointsName = async (req: Request, res: Response) => {
+    const gatheringPoints = await GATHERINGPOINTS.find().select('name')
+    return res.status(200).json(gatheringPoints);
+}
+
 const getGatheringPointByName = async (req: Request, res: Response) => {
     const name = req.params.name;
     const gatheringPoint =  await GATHERINGPOINTS.findOne({name: name})
     return res.status(200).json(gatheringPoint);
 }
 
-export {createGatheringPoint, getGatheringPoints, getGatheringPointByName};
+export { getGatheringPoints, getGatheringPointByName, getGatheringPointsName};

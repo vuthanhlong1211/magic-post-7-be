@@ -43,3 +43,4 @@ export const getPointFromName = async (locationName: string, locationType: strin
     if (curLocation) return curLocation;
     else throw new Error("location_find_failed")
 }
+

@@ -27,10 +27,15 @@ const getDeliveryPoints = async (req: Request, res: Response) => {
     return res.status(200).json(deliveryPoints);
 }
 
+const getDeliveryPointsName = async (req: Request, res: Response) => {
+    const deliveryPoints = await DELIVERYPOINTS.find().select('name')
+    return res.status(200).json(deliveryPoints);
+}
+
 const getDeliveryPointByName = async (req: Request, res: Response) => {
     const name = req.params.name;
     const deliveryPoint =  await DELIVERYPOINTS.findOne({name: name})
     return res.status(200).json(deliveryPoint);
 }
 
-export { getDeliveryPoints, getDeliveryPointByName};
+export { getDeliveryPoints, getDeliveryPointByName, getDeliveryPointsName};

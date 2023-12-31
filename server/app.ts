@@ -3,8 +3,8 @@ import express, {Express, Request, Response} from 'express'
 import path from 'path';
 import cors from "cors";
 import { login } from './controllers/auth';
-import { getDeliveryPoints, getDeliveryPointByName } from './controllers/deliveryPoints';
-import { getGatheringPoints, getGatheringPointByName } from './controllers/gatheringPoints';
+import { getDeliveryPoints, getDeliveryPointByName, getDeliveryPointsName } from './controllers/deliveryPoints';
+import { getGatheringPoints, getGatheringPointByName, getGatheringPointsName } from './controllers/gatheringPoints';
 import { createPoint } from './controllers/points';
 import { createManager, createStaff,
   getManagers, getUserByEmail,
@@ -51,6 +51,10 @@ async function connectDB() {
 app.get('/api/order/:orderCode', getOrderByOrderCode)
 
 app.post('/api/login', login);
+
+app.get('/api/points/gathering/name', getGatheringPointsName)
+
+app.get('/api/points/delivery/name', getDeliveryPointsName)
 // app.post('/create-user', createUserBackDoor)
 
 //Leader
