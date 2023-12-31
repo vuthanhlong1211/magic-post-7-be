@@ -34,18 +34,19 @@ const login = async (req: Request, res: Response) => {
             }
         }
     }
+    const position = user.position;
 
     let curLocation, locationType;
-    if (user.position === Position.DeliveryPointManager) {
+    if (position === Position.DeliveryPointManager) {
         curLocation = await DELIVERYPOINTS.findOne({ manager: user._id })
         locationType = "Điểm giao dịch"
-    } else if (user.position === Position.GatheringPointManager) {
+    } else if (position === Position.GatheringPointManager) {
         curLocation = await GATHERINGPOINTS.findOne({ manager: user._id })
         locationType = "Điểm tập kết"
-    } else if (user.position === Position.DeliveryPointStaff) {
+    } else if (position === Position.DeliveryPointStaff) {
         curLocation = await DELIVERYPOINTS.findOne({ staffs: { "$in": user._id } })
         locationType = "Điểm giao dịch"
-    } else if (user.position === Position.GatheringPointStaff) {
+    } else if (position === Position.GatheringPointStaff) {
         curLocation = await GATHERINGPOINTS.findOne({ staffs: { "$in": user._id } })
         locationType = "Điểm tập kết"
     } else {
@@ -53,15 +54,15 @@ const login = async (req: Request, res: Response) => {
             name: "everywhere",
         }
         locationType = "everything"
-    } console.log(curLocation)
+    } 
+    console.log(curLocation)
 
     if (curLocation) {
-        console.log(curLocation.name);
-        console.log(locationType);
+        console.log (position)
         res.status(200).send({
             token: jwt.sign({
                 username: user.username,
-                position: user.position,
+                position: position,
                 location: curLocation.name,
                 locationType: locationType
     }, SECRET_KEY, {
@@ -73,12 +74,6 @@ const login = async (req: Request, res: Response) => {
                 locationType: locationType
             }, success: true
         });
-        console.log(jwt.sign({
-            username: user.username,
-            position: user.position,
-            location: curLocation.name,
-            locationType: locationType
-                                }, SECRET_KEY));
     } else res.status(400).send("location_find_failed")
 
 }

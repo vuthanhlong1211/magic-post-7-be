@@ -12,15 +12,19 @@ export const createPoint = async (req: Request, res: Response) => {
             })
             return res.status(201).send("gathering_point_created");
         } else {
-            GATHERINGPOINTS.findOne({ name: gatheringPoint }).select('_id').then(async (_id) => {
-                DELIVERYPOINTS.create({
-                    name: name,
-                    location: location,
-                    gatheringPoint: _id
-                }).then(() => {
-                    return res.status(201).send("delivery_point_created")
+            try {
+                GATHERINGPOINTS.findOne({ name: gatheringPoint }).select('_id').then(async (_id) => {
+                    DELIVERYPOINTS.create({
+                        name: name,
+                        location: location,
+                        gatheringPoint: _id
+                    }).then(() => {
+                        return res.status(201).send("delivery_point_created")
+                    })
                 })
-            })
+            } catch (err) {
+                res.sendStatus(400);
+            }
         }
     } catch (err) {
         console.log(err);

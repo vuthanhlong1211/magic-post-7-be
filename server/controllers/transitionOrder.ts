@@ -14,6 +14,7 @@ import { Request, Response } from "express";
 //, update order status to "Đang giao hàng"
 const createTransitionOrder = async (req: Request, res: Response) => {
     const orderCode = req.body.orderCode;
+    const end = req.body.end;
     const startLocation = (req as CustomRequest).location;
     const startLocationType = (req as CustomRequest).locationType;
     var start: string = "";
@@ -23,7 +24,7 @@ const createTransitionOrder = async (req: Request, res: Response) => {
         start += "delivery "
     } 
     start += startLocation
-    const end = req.body.end;
+   
     try {
         const order = await ORDERS.findOne({ orderCode: orderCode });
         if (order) {
@@ -35,7 +36,14 @@ const createTransitionOrder = async (req: Request, res: Response) => {
                 timestamp: new Date()
             })
             const {startPoint , endPoint} = await moveOrder(order.orderCode, start, end);
-            if (startPoint) startPoint.transitionOrders.push(transitionOrder._id);
+            if (startPoint) {
+                startPoint.transitionOrders.push(transitionOrder._id);
+                startPoint.save();
+            }
+            if (typeof(endPoint) != "string" && endPoint) {
+                endPoint.transitionOrders.push(transitionOrder._id);
+                endPoint.save()
+            }
             return res.status(201).send("transition_order_created")
         }
     } catch (err) {

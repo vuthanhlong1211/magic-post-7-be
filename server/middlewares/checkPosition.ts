@@ -11,7 +11,6 @@ export const checkPosition = (requiredPosition: string) => {
         }
 
         if (position == requiredPosition){
-            (req as CustomRequest).position = position;
             next()
         } else {
             res.status(401).send("Unauthorized");

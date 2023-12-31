@@ -41,6 +41,7 @@ const calculateDeliveryFee = (grossWeight: number): number => {
 const createOrder = async (req: Request, res: Response) => {
     //payment choice is either paid by sender or paid by receiver
     //paymentChoice:["sender", "receiver"]
+    console.log(req.body);
     const sender = req.body.sender;
     const receiver = req.body.receiver;
     const type = req.body.type;
@@ -48,17 +49,19 @@ const createOrder = async (req: Request, res: Response) => {
     const instructionOnFailedDelivery = req.body.instructionOnFailedDelivery;
     const weight = req.body.weight;
     const paymentChoice = req.body.paymentChoice;
-    const deliveryPointName = req.body.deliveryPointName;
+    const deliveryPointName = (req as CustomRequest).location;
+    console.log(deliveryPointName);
     // console.log(sender);
     // console.log(receiver);
     //generate order code, and generate fee based on weight
     const orderCode = generateOrderCode();
-    var fee = calculateDeliveryFee(weight.grossWeight);
+    var fee = calculateDeliveryFee(weight);
     var receiverCharge = 0;
     if (paymentChoice == "receiver") {
         receiverCharge = fee;
         fee = 0;
     }
+    console.log(fee);
     const currentUsername = (req as CustomRequest).username;
     try {
         var currentUser = await USERS.findOne({ username: currentUsername });
@@ -116,16 +119,7 @@ const assignOrder = async (orderID: Types.ObjectId, deliveryPointName: string) =
         console.log(err);
     }
 }
-
-
-
-
-
-
-// const updateOrderStatus = async (req: Request, res: Response) => {
-
-// }
-
+// const updateOrderStatus = async (req: Request, res: Response)
 //get all orders
 const getOrders = async (req: Request, res: Response) => {
     try {
@@ -191,6 +185,36 @@ const getSentOrdersByLocationName = async (req: Request, res: Response) => {
     }
 }
 
+export const getSentOrdersAtCurLocation = async (req: Request, res: Response) => {
+    const name = (req as CustomRequest).location;
+    const locationType = (req as CustomRequest).locationType;
+    const orderIDs: Types.ObjectId[] = []
+    var sentOrders = [];
+    try {
+        const curLocation = await getPointFromName(name, locationType);
+        if (curLocation) {
+            for (var id of curLocation.orders) {
+                orderIDs.push(id);
+            }
+
+            for (var id of orderIDs) {
+                const order = await ORDERS.findById(id).select("status log")
+                if (order) {
+                    const transitionOrders = await TRANSITIONORDERS.find({order: order._id})
+                    for (var transitionOrder of transitionOrders) {
+                        if (transitionOrder.start.substring(4) == curLocation.name) {
+                            sentOrders.push(order);
+                            break;
+                        }
+                    }
+                }
+            } res.status(200).json(sentOrders)
+        } else throw Error("location_type_missing")
+    } catch (err) {
+        console.log(err);
+        res.status(400).send("Missing location type")
+    }
+}
 
 export const updateOrderStatus = async (orderCode: string, status: OrderStatus) => {
     try {
@@ -207,6 +231,38 @@ export const updateOrderStatus = async (orderCode: string, status: OrderStatus) 
 const getReceivedOrdersByLocationName = async (req: Request, res: Response) => {
     const name = req.body.name;
     const locationType = req.body.locationType;
+    const orderIDs: Types.ObjectId[] = []
+    var receivedOrders = [];
+    try {
+        const curLocation = await getPointFromName(name, locationType);
+        if (curLocation) {
+            for (var id of curLocation.orders) {
+                orderIDs.push(id);
+            }
+
+            for (var id of orderIDs) {
+                const order = await ORDERS.findById(id).select("status log")
+                if (order) {
+                    const transitionOrders = await TRANSITIONORDERS.find({order: order._id})
+                    for (var transitionOrder of transitionOrders) {
+                        if (transitionOrder.end.substring(4) == curLocation.name) {
+                            receivedOrders.push(order);
+                            break;
+                        }
+                    }
+                }
+            }
+            res.status(200).json(receivedOrders)
+        } else throw Error("location_type_missing")
+    } catch (err) {
+        console.log(err);
+        res.status(400).send("Missing location type")
+    }
+}
+
+export const getReceivedOrdersAtCurLocation = async (req: Request, res: Response) => {
+    const name = (req as CustomRequest).location;
+    const locationType = (req as CustomRequest).locationType;
     const orderIDs: Types.ObjectId[] = []
     var receivedOrders = [];
     try {

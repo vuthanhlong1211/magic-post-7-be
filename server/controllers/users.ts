@@ -4,6 +4,7 @@ import DELIVERYPOINTS from '../models/deliveryPoints';
 import { hashPassword, validateEmail, validatePassword, Position, getErrorMessage } from '../utils/utils';
 import { Request, Response } from 'express';
 import { Types } from 'mongoose';
+import { CustomRequest } from '../middlewares/auth';
 
 const validateInput = (password: string, email: string) => {
     if (!validatePassword(password)) {
@@ -126,7 +127,13 @@ const assignManager = async (userId: Types.ObjectId, position: string, location:
 }
 
 const createStaff = async (req: Request, res: Response) => {
-    const {username, password, email, name, position, location} = req.body;
+    const {username, password, email, name} = req.body;
+    const location = (req as CustomRequest).location;
+    const storedPosition = (req as CustomRequest).position;
+    console.log(storedPosition);
+    let staffPosition
+    if (storedPosition == Position.DeliveryPointManager) staffPosition = Position.DeliveryPointStaff;
+    else if (storedPosition == Position.GatheringPointManager) staffPosition = Position.GatheringPointStaff;
     console.log(req.body);
     //location is the name of either gathering point or delivery point, based on position
 
@@ -141,7 +148,7 @@ const createStaff = async (req: Request, res: Response) => {
         return res.status(400).send(getErrorMessage(err));
     }
     
-    if (position != Position.DeliveryPointStaff && position != Position.GatheringPointStaff){
+    if (staffPosition != Position.DeliveryPointStaff && staffPosition != Position.GatheringPointStaff){
         return res.status(400).send('position_invalid')
     }
 
@@ -152,7 +159,7 @@ const createStaff = async (req: Request, res: Response) => {
     }
 
     try {
-        await createUser(username, password, email, name, position).then(async ([_id, position]) => {
+        await createUser(username, password, email, name, staffPosition).then(async ([_id, position]) => {
             try {
                 await assignStaff(_id,position, location).then(() => {
                     return res.status(201).send("staff_created")

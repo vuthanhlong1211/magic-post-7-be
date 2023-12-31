@@ -13,7 +13,9 @@ import { createManager, createStaff,
 import { createOrder, getOrders, 
   getOrderByOrderCode, getOrdersByLocationName,
   getSentOrdersByLocationName,
-  getReceivedOrdersByLocationName
+  getReceivedOrdersByLocationName,
+  getSentOrdersAtCurLocation,
+  getReceivedOrdersAtCurLocation
 } from './controllers/orders';
 import {  createTransitionOrder, confirmTransitionOrder} from './controllers/transitionOrder'
 import { Position } from './utils/utils';
@@ -71,7 +73,6 @@ app.get('/protected/users/managers',[auth, checkPosition(Position.Leader)], getM
 app.get('/protected/users?email=<string>',[auth, checkPosition(Position.Leader)], getUserByEmail);
 
 
-
 app.get('/protected/orders', [auth, checkPosition(Position.Leader)], getOrders)
 
 // app.get('/protected/orders', [auth, checkPosition("Lãnh đạo")], getOrdersByLocationName)
@@ -88,9 +89,9 @@ app.get('/protected/users/point',[auth, checkPosition("Trưởng điểm")], get
 
 app.get('/protected/orders', [auth, checkPosition("Trưởng điểm")], getOrdersByLocationName)
 
-app.get('/protected/orders/sent', [auth, checkPosition("Trưởng điểm")], getSentOrdersByLocationName)
+app.get('/protected/orders/sent', [auth, checkPosition("Trưởng điểm")], getSentOrdersAtCurLocation)
 
-app.get('/protected/orders/received', [auth, checkPosition("Trưởng điểm")], getReceivedOrdersByLocationName)
+app.get('/protected/orders/received', [auth, checkPosition("Trưởng điểm")], getReceivedOrdersAtCurLocation)
 
 // app.get('/users?email=<string>', getUserByEmail);
 
@@ -104,6 +105,14 @@ app.post('/protected/order/transition/create', [auth, checkPosition(Position.Gat
 app.patch('/protected/order/transition/:orderCode/confirm', [auth, checkPosition(Position.DeliveryPointStaff)], confirmTransitionOrder)
 
 app.patch('/protected/order/transition/:orderCode/confirm', [auth, checkPosition(Position.GatheringPointStaff)], confirmTransitionOrder)
+
+app.get('/protected/orders/sent', [auth, checkPosition(Position.DeliveryPointStaff)], getSentOrdersAtCurLocation)
+
+app.get('/protected/orders/received', [auth, checkPosition(Position.DeliveryPointStaff)], getReceivedOrdersAtCurLocation)
+
+app.get('/protected/orders/sent', [auth, checkPosition(Position.GatheringPointStaff)], getSentOrdersAtCurLocation)
+
+app.get('/protected/orders/received', [auth, checkPosition(Position.GatheringPointStaff)], getReceivedOrdersAtCurLocation)
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
