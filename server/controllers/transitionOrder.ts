@@ -22,9 +22,9 @@ const createTransitionOrder = async (req: Request, res: Response) => {
         start += "gathering "
     } else if (startLocationType === "Điểm giao dịch") {
         start += "delivery "
-    } 
+    }
     start += startLocation
-   
+
     try {
         const order = await ORDERS.findOne({ orderCode: orderCode });
         if (order) {
@@ -35,12 +35,12 @@ const createTransitionOrder = async (req: Request, res: Response) => {
                 status: TransitionStatus.Pending,
                 timestamp: new Date()
             })
-            const {startPoint , endPoint} = await moveOrder(order.orderCode, start, end);
+            const { startPoint, endPoint } = await moveOrder(order.orderCode, start, end);
             if (startPoint) {
                 startPoint.transitionOrders.push(transitionOrder._id);
                 startPoint.save();
             }
-            if (typeof(endPoint) != "string" && endPoint) {
+            if (typeof (endPoint) != "string" && endPoint) {
                 endPoint.transitionOrders.push(transitionOrder._id);
                 endPoint.save()
             }
@@ -49,7 +49,61 @@ const createTransitionOrder = async (req: Request, res: Response) => {
     } catch (err) {
         return res.status(400).send(getErrorMessage(err));
     }
+}
 
+export const createTransitionOrderService = async (orderCode: string, end: string, startLocation: string, startLocationType: string) => {
+    // const orderCode = req.body.orderCode;
+    // const end = req.body.end;
+    // const startLocation = (req as CustomRequest).location;
+    // const startLocationType = (req as CustomRequest).locationType;
+    var start: string = "";
+    if (startLocationType === "Điểm tập kết") {
+        start += "gathering ";
+        start += startLocation
+    } else if (startLocationType === "Điểm giao dịch") {
+        start += "delivery ";
+        start += startLocation
+    } else if (startLocationType === "Khách hàng") {
+        start = startLocation
+    }
+    
+    try {
+        const order = await ORDERS.findOne({ orderCode: orderCode });
+        if (order) {
+            let transitionOrder
+            if (start === "customer"){
+                transitionOrder = await TRANSITIONORDERS.create({
+                    start: start,
+                    end: end,
+                    order: order._id,
+                    status: TransitionStatus.Confirmed,
+                    timestamp: new Date()
+                })
+            } else {
+                transitionOrder = await TRANSITIONORDERS.create({
+                    start: start,
+                    end: end,
+                    order: order._id,
+                    status: TransitionStatus.Pending,
+                    timestamp: new Date()
+                })
+            }
+            
+            const { startPoint, endPoint } = await moveOrder(order.orderCode, start, end);
+            if (startPoint) {
+                startPoint.transitionOrders.push(transitionOrder._id);
+                startPoint.save();
+            }
+            if (typeof (endPoint) != "string" && endPoint) {
+                endPoint.transitionOrders.push(transitionOrder._id);
+                endPoint.save()
+            }
+            return;
+        }
+    } catch (err) {
+        console.log(getErrorMessage(err));
+        return;
+    }
 }
 
 const confirmTransitionOrder = async (req: Request, res: Response) => {
@@ -93,8 +147,10 @@ const getStartAndEndPoint = async (orderCode: string, start: string, end: string
     let startPoint;
     if (start.slice(0, 8) === "delivery") {
         startPoint = await DELIVERYPOINTS.findOne({ name: start.slice(9) }).select('orders');
-    } else if (start.slice(0, 9) === "gathering"){
+    } else if (start.slice(0, 9) === "gathering") {
         startPoint = await GATHERINGPOINTS.findOne({ name: start.slice(10) }).select('orders');
+    } else {
+        startPoint = undefined;
     }
 
     let endPoint;
@@ -104,6 +160,7 @@ const getStartAndEndPoint = async (orderCode: string, start: string, end: string
         endPoint = await GATHERINGPOINTS.findOne({ name: end.slice(4) }).select('orders');
     } else { // to customer
         updateOrderStatus(orderCode, OrderStatus.Delivering);
+        endPoint = undefined;
     }
 
     return { startPoint, endPoint }
@@ -112,28 +169,40 @@ const getStartAndEndPoint = async (orderCode: string, start: string, end: string
 const moveOrder = async (orderCode: string, start: string, end: string) => {
     try {
         await getStartAndEndPoint(orderCode, start, end).then(async ({ startPoint, endPoint }) => {
-            console.log(startPoint)
-            console.log(endPoint)
             if (endPoint && startPoint) { //between points
                 const order = await ORDERS.findOne({ orderCode: orderCode }).select('_id');
                 if (order) {
-                    const orderID = order._id
+                    const orderID = order._id;
                     const index = startPoint.orders.indexOf(orderID, 0);
-                    console.log(index)
                     if (index == -1) {
                         throw new Error("order_not_exist_at_start")
                     } else {
                         startPoint.orders.splice(index, 1);
                         startPoint.save()
-                        console.log(orderID);
                         endPoint.orders.push(orderID);
                         endPoint.save();
-                        console.log(endPoint.orders)
-                        
                     }
                 } else throw new Error("order_find_failed")
-            }
-        })
+            } else if (startPoint == undefined && endPoint) { //from customer to a point
+                const order = await ORDERS.findOne({ orderCode: orderCode }).select('_id');
+                if (order) {
+                    const orderID = order._id;
+                    endPoint.orders.push(orderID);
+                    endPoint.save();
+                } else throw new Error("order_find_failed")
+            } else if (endPoint == undefined && startPoint) { //from a point to customer
+                const order = await ORDERS.findOne({ orderCode: orderCode }).select('_id');
+                if (order) {
+                    const orderID = order._id;
+                    const index = startPoint.orders.indexOf(orderID, 0);
+                    if (index == -1) {
+                        throw new Error("order_not_exist_at_start")
+                    } else {
+                        startPoint.orders.splice(index, 1);
+                        startPoint.save()
+                    }
+                } else throw new Error("order_find_failed")
+            }})
     } catch (err) {
         console.log(err)
     }

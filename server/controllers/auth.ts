@@ -55,7 +55,6 @@ const login = async (req: Request, res: Response) => {
         }
         locationType = "everything"
     } 
-    console.log(curLocation)
 
     if (curLocation) {
         console.log (position)

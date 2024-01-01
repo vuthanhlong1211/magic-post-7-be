@@ -50,7 +50,6 @@ const createUser = async (username: string, password: string, email: string, nam
 
 const createManager = async (req: Request, res: Response) => {
     const {username, password, email, name, position, location} = req.body;
-    console.log(req.body);
     //location is the name of either gathering point or delivery point, based on position
 
     //Input validation
@@ -130,11 +129,9 @@ const createStaff = async (req: Request, res: Response) => {
     const {username, password, email, name} = req.body;
     const location = (req as CustomRequest).location;
     const storedPosition = (req as CustomRequest).position;
-    console.log(storedPosition);
     let staffPosition
     if (storedPosition == Position.DeliveryPointManager) staffPosition = Position.DeliveryPointStaff;
     else if (storedPosition == Position.GatheringPointManager) staffPosition = Position.GatheringPointStaff;
-    console.log(req.body);
     //location is the name of either gathering point or delivery point, based on position
 
     //Input validation
@@ -203,9 +200,9 @@ const getManagers = async (req: Request, res: Response) => {
 }
 
 //return all users from a gathering point or a delivery point
-const getUsersByLocationName = async (req: Request, res: Response) =>{
-    const name = req.body.name;
-    const locationType = req.body.locationType
+const getUsersAtCurLocation = async (req: Request, res: Response) =>{
+    const name = (req as CustomRequest).location;
+    const locationType = (req as CustomRequest).locationType;
     const userIDs = [];
     var users = [];
     try {
@@ -254,4 +251,4 @@ const deleteUser = async (req: Request, res: Response) => {
     })
 }
 
-export {createManager, createStaff, getManagers, getUsersByLocationName, getUserByEmail, deleteUser};
+export {createManager, createStaff, getManagers, getUsersAtCurLocation as getUsersByLocationName, getUserByEmail, deleteUser};

@@ -9,9 +9,9 @@ import { createPoint } from './controllers/points';
 import { createManager, createStaff,
   getManagers, getUserByEmail,
   getUsers,
-  getUsersByLocationName } from './controllers/users';
+  getUsersByLocationName as getUsersAtCurLocation } from './controllers/users';
 import { createOrder, getOrders, 
-  getOrderByOrderCode, getOrdersByLocationName,
+  getOrderByOrderCode, getOrdersAtCurLocation,
   getSentOrdersByLocationName,
   getReceivedOrdersByLocationName,
   getSentOrdersAtCurLocation,
@@ -81,21 +81,21 @@ app.get('/protected/orders', [auth, checkPosition(Position.Leader)], getOrders)
 
 // app.get('/protected/orders', [auth, checkPosition("Lãnh đạo")], getOrdersByLocationName)
 
-app.get('/protected/orders/sent', [auth, checkPosition("Lãnh đạo")], getSentOrdersByLocationName)
+app.post('/protected/orders/sent', [auth, checkPosition("Lãnh đạo")], getSentOrdersByLocationName)
 
-app.get('/protected/orders/received', [auth, checkPosition("Lãnh đạo")], getReceivedOrdersByLocationName)
+app.post('/protected/orders/received', [auth, checkPosition("Lãnh đạo")], getReceivedOrdersByLocationName)
 
 
 //Managers
 app.post('/protected/user/create/staff',[auth, checkPosition("Trưởng điểm")], createStaff)
 
-app.get('/protected/users/point',[auth, checkPosition("Trưởng điểm")], getUsersByLocationName)
+app.get('/protected/users/point',[auth, checkPosition("Trưởng điểm")], getUsersAtCurLocation)
 
-app.get('/protected/orders', [auth, checkPosition("Trưởng điểm")], getOrdersByLocationName)
+app.get('/protected/orders', [auth, checkPosition("Trưởng điểm")], getOrdersAtCurLocation)
 
-app.get('/protected/orders/sent', [auth, checkPosition("Trưởng điểm")], getSentOrdersAtCurLocation)
+app.get('/protected/orders/sent', [auth], getSentOrdersAtCurLocation)
 
-app.get('/protected/orders/received', [auth, checkPosition("Trưởng điểm")], getReceivedOrdersAtCurLocation)
+app.get('/protected/orders/received', [auth], getReceivedOrdersAtCurLocation)
 
 // app.get('/users?email=<string>', getUserByEmail);
 
@@ -109,14 +109,6 @@ app.post('/protected/order/transition/create', [auth, checkPosition(Position.Gat
 app.patch('/protected/order/transition/:orderCode/confirm', [auth, checkPosition(Position.DeliveryPointStaff)], confirmTransitionOrder)
 
 app.patch('/protected/order/transition/:orderCode/confirm', [auth, checkPosition(Position.GatheringPointStaff)], confirmTransitionOrder)
-
-app.get('/protected/orders/sent', [auth, checkPosition(Position.DeliveryPointStaff)], getSentOrdersAtCurLocation)
-
-app.get('/protected/orders/received', [auth, checkPosition(Position.DeliveryPointStaff)], getReceivedOrdersAtCurLocation)
-
-app.get('/protected/orders/sent', [auth, checkPosition(Position.GatheringPointStaff)], getSentOrdersAtCurLocation)
-
-app.get('/protected/orders/received', [auth, checkPosition(Position.GatheringPointStaff)], getReceivedOrdersAtCurLocation)
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
