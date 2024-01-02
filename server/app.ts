@@ -15,7 +15,8 @@ import { createOrder, getOrders,
   getSentOrdersByLocationName,
   getReceivedOrdersByLocationName,
   getSentOrdersAtCurLocation,
-  getReceivedOrdersAtCurLocation
+  getReceivedOrdersAtCurLocation,
+  getFullOrderByOrderCode
 } from './controllers/orders';
 import {  createTransitionOrder, confirmTransitionOrder} from './controllers/transitionOrder'
 import { Position } from './utils/utils';
@@ -78,6 +79,8 @@ app.get('/protected/users?email=<string>',[auth, checkPosition(Position.Leader)]
 
 
 app.get('/protected/orders', [auth, checkPosition(Position.Leader)], getOrders)
+
+app.get('/protected/order/:orderCode',  [auth, checkPosition(Position.Leader)], getFullOrderByOrderCode)
 
 // app.get('/protected/orders', [auth, checkPosition("Lãnh đạo")], getOrdersByLocationName)
 

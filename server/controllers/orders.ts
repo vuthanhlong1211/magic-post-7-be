@@ -156,6 +156,8 @@ const getOrdersAtCurLocation = async (req: Request, res: Response) => {
 const getSentOrdersByLocationName = async (req: Request, res: Response) => {
     const name = req.body.name;
     const locationType = req.body.locationType;
+    console.log(name);
+    console.log(locationType);
     const orderIDs: Types.ObjectId[] = []
     var sentOrders = [];
     try {
@@ -199,8 +201,8 @@ export const updateOrderStatus = async (orderCode: string, status: OrderStatus) 
 }
 
 const getReceivedOrdersByLocationName = async (req: Request, res: Response) => {
-    const name = (req as CustomRequest).location;
-    const locationType = (req as CustomRequest).locationType;
+    const name = req.body.name;
+    const locationType = req.body.locationType;
     const orderIDs: Types.ObjectId[] = []
     var receivedOrders = [];
     try {
@@ -301,10 +303,22 @@ export const getReceivedOrdersAtCurLocation = async (req: Request, res: Response
     }
 }
 
+//used in api for customers
 const getOrderByOrderCode = async (req: Request, res: Response) => {
     const orderCode = req.params.orderCode;
     try {
         const order = await ORDERS.findOne({ orderCode: orderCode }).select("status logs transitionOrders -_id");
+        if (order) res.status(200).json(order);
+        else throw new Error("Order not found")
+    } catch (err) {
+        res.status(400).send(err);
+    }
+}
+
+export const getFullOrderByOrderCode = async (req: Request, res: Response) => {
+    const orderCode = req.params.orderCode;
+    try {
+        const order = await ORDERS.findOne({ orderCode: orderCode }).select("-_id");
         if (order) res.status(200).json(order);
         else throw new Error("Order not found")
     } catch (err) {
