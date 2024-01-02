@@ -122,7 +122,7 @@ const assignOrder = async (orderID: Types.ObjectId, deliveryPointName: string) =
 //get all orders
 const getOrders = async (req: Request, res: Response) => {
     try {
-        const orders = await ORDERS.find().select('status');
+        const orders = await ORDERS.find().select("orderCode status sender receiver logs");
         if (orders) res.status(200).json(orders);
     } catch (err) {
         return res.status(400).send(getErrorMessage(err));
@@ -142,7 +142,7 @@ const getOrdersAtCurLocation = async (req: Request, res: Response) => {
                 orderIDs.push(id);
             }
             for (var id of orderIDs) {
-                orders.push(await ORDERS.findById(id).select("status log"))
+                orders.push(await ORDERS.findById(id).select("orderCode status sender receiver logs"))
             }
 
             res.status(200).json(orders)
@@ -166,7 +166,7 @@ const getSentOrdersByLocationName = async (req: Request, res: Response) => {
             }
 
             for (var id of orderIDs) {
-                const order = await ORDERS.findById(id).select("status log")
+                const order = await ORDERS.findById(id).select("orderCode status sender receiver logs")
                 if (order) {
                     const transitionOrders = await TRANSITIONORDERS.find({order: order._id})
                     for (var transitionOrder of transitionOrders) {
@@ -211,7 +211,7 @@ const getReceivedOrdersByLocationName = async (req: Request, res: Response) => {
             }
 
             for (var id of orderIDs) {
-                const order = await ORDERS.findById(id).select("status log")
+                const order = await ORDERS.findById(id).select("orderCode status sender receiver logs")
                 if (order) {
                     const transitionOrders = await TRANSITIONORDERS.find({order: order._id})
                     for (var transitionOrder of transitionOrders) {
@@ -243,7 +243,7 @@ export const getSentOrdersAtCurLocation = async (req: Request, res: Response) =>
             }
 
             for (var id of orderIDs) {
-                const order = await ORDERS.findById(id).select("status logs")
+                const order = await ORDERS.findById(id).select("orderCode status sender receiver logs")
                 if (order) {
                     const transitionOrders = await TRANSITIONORDERS.find({order: order._id});
                     console.log(transitionOrders);
@@ -275,7 +275,7 @@ export const getReceivedOrdersAtCurLocation = async (req: Request, res: Response
             }
 
             for (var id of orderIDs) {
-                const order = await ORDERS.findById(id).select("status log")
+                const order = await ORDERS.findById(id).select("orderCode status sender receiver logs")
                 if (order) {
                     const transitionOrders = await TRANSITIONORDERS.find({order: order._id})
                     console.log(transitionOrders);
