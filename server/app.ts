@@ -18,7 +18,7 @@ import { createOrder, getOrders,
   getReceivedOrdersAtCurLocation,
   getFullOrderByOrderCode
 } from './controllers/orders';
-import {  createTransitionOrder, confirmTransitionOrder} from './controllers/transitionOrder'
+import {  createTransitionOrder, confirmTransitionOrder, getPendingTransitionOrdersAtCurEndLocation} from './controllers/transitionOrder'
 import { Position } from './utils/utils';
 import { auth } from './middlewares/auth';
 import { checkPosition } from './middlewares/checkPosition';
@@ -107,13 +107,11 @@ app.post('/protected/points/delivery-gathering', [auth, checkPosition(Position.G
 
 app.post('/protected/order/create', [auth, checkPosition(Position.DeliveryPointStaff)], createOrder)
 
-app.post('/protected/order/transition/create', [auth, checkPosition(Position.DeliveryPointStaff)], createTransitionOrder)
+app.post('/protected/order/transition/create', [auth], createTransitionOrder)
 
-app.post('/protected/order/transition/create', [auth, checkPosition(Position.GatheringPointStaff)], createTransitionOrder)
+app.patch('/protected/order/transition/:orderCode/confirm', [auth], confirmTransitionOrder)
 
-app.patch('/protected/order/transition/:orderCode/confirm', [auth, checkPosition(Position.DeliveryPointStaff)], confirmTransitionOrder)
-
-app.patch('/protected/order/transition/:orderCode/confirm', [auth, checkPosition(Position.GatheringPointStaff)], confirmTransitionOrder)
+app.get('/protected/order/transition/pending', [auth], getPendingTransitionOrdersAtCurEndLocation)
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);

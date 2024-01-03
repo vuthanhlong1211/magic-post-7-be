@@ -109,8 +109,8 @@ export const createTransitionOrderService = async (orderCode: string, end: strin
 const confirmTransitionOrder = async (req: Request, res: Response) => {
     try {
         const orderCode = req.params.orderCode;
-        const locationName = req.body.locationName;
-        const locationType = req.body.locationType;
+        const locationName = (req as CustomRequest).location;
+        const locationType = (req as CustomRequest).locationType;
         const order = await ORDERS.findOne({ orderCode: orderCode });
         if (order) {
             const orderID = order._id
@@ -127,7 +127,6 @@ const confirmTransitionOrder = async (req: Request, res: Response) => {
                         const date = new Date();
                         const message = date.toString().substring(0, 23) + " Đơn hàng chuyển từ " + lastTransitionOrder.start + " tới " + lastTransitionOrder.end;
                         order.logs.push(message);
-                        order.status = OrderStatus.Transporting;
                         order.save();
                         lastTransitionOrder.save();
                         res.status(200).send("transition_order_confirmed")
@@ -139,6 +138,15 @@ const confirmTransitionOrder = async (req: Request, res: Response) => {
         res.status(400).send(err)
     }
 
+}
+
+export const getPendingTransitionOrdersAtCurEndLocation = async (req: Request, res: Response) => {
+    var location = (req as CustomRequest).location;
+    const locationType = (req as CustomRequest).locationType;
+    if (locationType == "Điểm giao dịch") location = "delivery " + location;
+    else if (locationType == "Điểm tập kết") location = "gathering " + location
+    const pendingTransitionOrders = await TRANSITIONORDERS.find({end: location, status: TransitionStatus.Pending});
+    res.send(200).json(pendingTransitionOrders)
 }
 
 //push the id of the moved order into the orders field
