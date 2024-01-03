@@ -145,8 +145,13 @@ export const getPendingTransitionOrdersAtCurEndLocation = async (req: Request, r
     const locationType = (req as CustomRequest).locationType;
     if (locationType == "Điểm giao dịch") location = "delivery " + location;
     else if (locationType == "Điểm tập kết") location = "gathering " + location
-    const pendingTransitionOrders = await TRANSITIONORDERS.find({end: location, status: TransitionStatus.Pending});
-    res.send(200).json(pendingTransitionOrders)
+    try {
+        const pendingTransitionOrders = await TRANSITIONORDERS.find({end: location, status: TransitionStatus.Pending});
+        return res.status(200).json(pendingTransitionOrders)
+    } catch (err){
+        return res.status(400).send("get_pending_orders_failed");
+    }
+    
 }
 
 //push the id of the moved order into the orders field

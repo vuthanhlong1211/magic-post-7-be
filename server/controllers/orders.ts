@@ -221,12 +221,16 @@ const getReceivedOrdersByLocationName = async (req: Request, res: Response) => {
 export const getSentOrdersAtCurLocation = async (req: Request, res: Response) => {
     var name = (req as CustomRequest).location;
     const locationType = (req as CustomRequest).locationType;
+    console.log(locationType)
     const orderIDs: Types.ObjectId[] = [];
     var sentOrders = [];
-    if (locationType == "Điểm giao dịch") name = "delivery " + name;
-    else if (locationType == "Điểm tập kết") name = "gathering " + name;
+    
+    console.log(name);
     try {
         const curLocation = await getPointFromName(name, locationType);
+        if (locationType == "Điểm giao dịch") name = "delivery " + name;
+        else if (locationType == "Điểm tập kết") name = "gathering " + name;
+
         if (curLocation) {
             const transitionOrders = await TRANSITIONORDERS.find({ end: name })
             console.log(transitionOrders);
