@@ -251,4 +251,4 @@ const deleteUser = async (req: Request, res: Response) => {
     })
 }
 
-export {createManager, createStaff, getManagers, getUsersAtCurLocation as getUsersByLocationName, getUserByEmail, deleteUser};
+export {createManager, createStaff, getManagers, getUsersAtCurLocation, getUserByEmail, deleteUser};

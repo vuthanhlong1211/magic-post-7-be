@@ -13,19 +13,19 @@ import { Request, Response } from "express";
 //if the end is "Customer", meaning a customer
 //, update order status to "Đang giao hàng"
 const createTransitionOrder = async (req: Request, res: Response) => {
-    const orderCode = req.body.orderCode;
-    const end = req.body.end;
+    const orderCode = req.body.order;
+    var end = req.body.end;
     const startLocation = (req as CustomRequest).location;
     const startLocationType = (req as CustomRequest).locationType;
     var start: string = "";
-    if (startLocationType === "Điểm tập kết") {
-        start += "gathering "
-    } else if (startLocationType === "Điểm giao dịch") {
-        start += "delivery "
-    }
     start += startLocation
-
     try {
+        if (startLocationType == "Điểm giao dịch") {
+            const deliveryPoint = await DELIVERYPOINTS.findOne({ name: startLocation }).select("gatheringPoint");
+            const gatheringPoint = await GATHERINGPOINTS.findById(deliveryPoint?.gatheringPoint);
+            end = "gathering " + gatheringPoint?.name;
+        }
+        
         const order = await ORDERS.findOne({ orderCode: orderCode });
         if (order) {
             const transitionOrder = await TRANSITIONORDERS.create({
@@ -66,12 +66,12 @@ export const createTransitionOrderService = async (orderCode: string, end: strin
     } else if (startLocationType === "Khách hàng") {
         start = startLocation
     }
-    
+
     try {
         const order = await ORDERS.findOne({ orderCode: orderCode });
         if (order) {
             let transitionOrder
-            if (start === "customer"){
+            if (start === "customer") {
                 transitionOrder = await TRANSITIONORDERS.create({
                     start: start,
                     end: end,
@@ -88,7 +88,7 @@ export const createTransitionOrderService = async (orderCode: string, end: strin
                     timestamp: new Date()
                 })
             }
-            
+
             const { startPoint, endPoint } = await moveOrder(order.orderCode, start, end);
             if (startPoint) {
                 startPoint.transitionOrders.push(transitionOrder._id);
@@ -202,7 +202,8 @@ const moveOrder = async (orderCode: string, start: string, end: string) => {
                         startPoint.save()
                     }
                 } else throw new Error("order_find_failed")
-            }})
+            }
+        })
     } catch (err) {
         console.log(err)
     }

@@ -64,6 +64,10 @@ function getErrorMessage(error: unknown) {
   return String(error);
 }
 
+export function removeDuplicates<T>(array: T[]): T[] {
+  return [...new Set(array)];
+}
+
 enum Position {
   Leader = "Lãnh đạo",
   GatheringPointManager = "Trưởng điểm tập kết",

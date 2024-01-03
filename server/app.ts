@@ -3,13 +3,13 @@ import express, {Express, Request, Response} from 'express'
 import path from 'path';
 import cors from "cors";
 import { login } from './controllers/auth';
-import { getDeliveryPoints, getDeliveryPointByName, getDeliveryPointsName } from './controllers/deliveryPoints';
+import { getDeliveryPoints, getDeliveryPointByName, getDeliveryPointsName, getDeliveryPointsFromGatheringPoints } from './controllers/deliveryPoints';
 import { getGatheringPoints, getGatheringPointByName, getGatheringPointsName } from './controllers/gatheringPoints';
 import { createPoint } from './controllers/points';
 import { createManager, createStaff,
   getManagers, getUserByEmail,
   getUsers,
-  getUsersByLocationName as getUsersAtCurLocation } from './controllers/users';
+  getUsersAtCurLocation } from './controllers/users';
 import { createOrder, getOrders, 
   getOrderByOrderCode, getOrdersAtCurLocation,
   getSentOrdersByLocationName,
@@ -80,7 +80,7 @@ app.get('/protected/users?email=<string>',[auth, checkPosition(Position.Leader)]
 
 app.get('/protected/orders', [auth, checkPosition(Position.Leader)], getOrders)
 
-app.get('/protected/order/:orderCode',  [auth, checkPosition(Position.Leader)], getFullOrderByOrderCode)
+app.get('/protected/order/:orderCode',  [auth], getFullOrderByOrderCode)
 
 // app.get('/protected/orders', [auth, checkPosition("Lãnh đạo")], getOrdersByLocationName)
 
@@ -94,7 +94,7 @@ app.post('/protected/user/create/staff',[auth, checkPosition("Trưởng điểm"
 
 app.get('/protected/users/point',[auth, checkPosition("Trưởng điểm")], getUsersAtCurLocation)
 
-app.get('/protected/orders', [auth, checkPosition("Trưởng điểm")], getOrdersAtCurLocation)
+app.get('/protected/orders/point', [auth], getOrdersAtCurLocation)
 
 app.get('/protected/orders/sent', [auth], getSentOrdersAtCurLocation)
 
@@ -103,6 +103,8 @@ app.get('/protected/orders/received', [auth], getReceivedOrdersAtCurLocation)
 // app.get('/users?email=<string>', getUserByEmail);
 
 //Staffs
+app.post('/protected/points/delivery-gathering', [auth, checkPosition(Position.GatheringPointStaff), getDeliveryPointsFromGatheringPoints])
+
 app.post('/protected/order/create', [auth, checkPosition(Position.DeliveryPointStaff)], createOrder)
 
 app.post('/protected/order/transition/create', [auth, checkPosition(Position.DeliveryPointStaff)], createTransitionOrder)

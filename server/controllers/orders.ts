@@ -5,7 +5,7 @@ import ORDERS from "../models/orders"
 import USERS from "../models/users"
 import { Request, Response } from "express"
 import { Types } from "mongoose";
-import { OrderStatus, TransitionStatus, getErrorMessage } from "../utils/utils";
+import { OrderStatus, TransitionStatus, getErrorMessage, removeDuplicates } from "../utils/utils";
 import { getPointFromName } from "./points";
 import TRANSITIONORDERS from "../models/transitionOrder";
 import { createTransitionOrderService } from "./transitionOrder";
@@ -77,7 +77,7 @@ const createOrder = async (req: Request, res: Response) => {
                     address: receiver.address,
                     phoneNumber: receiver.phoneNumber,
                     code: receiver.code,
-                    postalCode: receiver.postalCode                
+                    postalCode: receiver.postalCode
                 },
                 orderCode: orderCode,
                 type: type,
@@ -154,7 +154,7 @@ const getOrdersAtCurLocation = async (req: Request, res: Response) => {
 }
 
 const getSentOrdersByLocationName = async (req: Request, res: Response) => {
-    const name = req.body.name;
+    var name = req.body.name;
     const locationType = req.body.locationType;
     console.log(name);
     console.log(locationType);
@@ -162,22 +162,15 @@ const getSentOrdersByLocationName = async (req: Request, res: Response) => {
     var sentOrders = [];
     try {
         const curLocation = await getPointFromName(name, locationType);
+        if (locationType == "Điểm giao dịch") name = "delivery " + name;
+        else if (locationType == "Điểm tập kết") name = "gathering " + name;
         if (curLocation) {
-            for (var id of curLocation.orders) {
-                orderIDs.push(id);
-            }
-
-            for (var id of orderIDs) {
-                const order = await ORDERS.findById(id).select("orderCode status sender receiver logs")
-                if (order) {
-                    const transitionOrders = await TRANSITIONORDERS.find({order: order._id})
-                    for (var transitionOrder of transitionOrders) {
-                        if (transitionOrder.start.substring(transitionOrder.start.indexOf(' ') + 1) == curLocation.name) {
-                            sentOrders.push(order);
-                            break;
-                        }
-                    }
-                }
+            const transitionOrders = await TRANSITIONORDERS.find({ start: name })
+            console.log(transitionOrders);
+            for (var transitionOrder of transitionOrders) {
+                const order = await ORDERS.findById(transitionOrder.order).select("orderCode status sender receiver logs");
+                if (order) sentOrders.push(order);
+                else throw new Error("order_find_failed");
             } res.status(200).json(sentOrders)
         } else throw Error("location_type_missing")
     } catch (err) {
@@ -201,28 +194,21 @@ export const updateOrderStatus = async (orderCode: string, status: OrderStatus) 
 }
 
 const getReceivedOrdersByLocationName = async (req: Request, res: Response) => {
-    const name = req.body.name;
+    var name = req.body.name;
     const locationType = req.body.locationType;
     const orderIDs: Types.ObjectId[] = []
     var receivedOrders = [];
     try {
         const curLocation = await getPointFromName(name, locationType);
+        if (locationType == "Điểm giao dịch") name = "delivery " + name;
+        else if (locationType == "Điểm tập kết") name = "gathering " + name;
         if (curLocation) {
-            for (var id of curLocation.orders) {
-                orderIDs.push(id);
-            }
-
-            for (var id of orderIDs) {
-                const order = await ORDERS.findById(id).select("orderCode status sender receiver logs")
-                if (order) {
-                    const transitionOrders = await TRANSITIONORDERS.find({order: order._id})
-                    for (var transitionOrder of transitionOrders) {
-                        if (transitionOrder.end.substring(transitionOrder.end.indexOf(' ') + 1) == curLocation.name) {
-                            receivedOrders.push(order);
-                            break;
-                        }
-                    }
-                }
+            const transitionOrders = await TRANSITIONORDERS.find({ end: name })
+            console.log(transitionOrders);
+            for (var transitionOrder of transitionOrders) {
+                const order = await ORDERS.findById(transitionOrder.order).select("orderCode status sender receiver logs");
+                if (order) receivedOrders.push(order);
+                else throw new Error("order_find_failed");
             }
             res.status(200).json(receivedOrders)
         } else throw Error("location_type_missing")
@@ -233,29 +219,21 @@ const getReceivedOrdersByLocationName = async (req: Request, res: Response) => {
 }
 
 export const getSentOrdersAtCurLocation = async (req: Request, res: Response) => {
-    const name = (req as CustomRequest).location;
+    var name = (req as CustomRequest).location;
     const locationType = (req as CustomRequest).locationType;
     const orderIDs: Types.ObjectId[] = [];
     var sentOrders = [];
+    if (locationType == "Điểm giao dịch") name = "delivery " + name;
+    else if (locationType == "Điểm tập kết") name = "gathering " + name;
     try {
         const curLocation = await getPointFromName(name, locationType);
         if (curLocation) {
-            for (var id of curLocation.orders) {
-                orderIDs.push(id);
-            }
-
-            for (var id of orderIDs) {
-                const order = await ORDERS.findById(id).select("orderCode status sender receiver logs")
-                if (order) {
-                    const transitionOrders = await TRANSITIONORDERS.find({order: order._id});
-                    console.log(transitionOrders);
-                    for (var transitionOrder of transitionOrders) {
-                        if (transitionOrder.start.substring(transitionOrder.start.indexOf(' ') + 1) == curLocation.name) {
-                            sentOrders.push(order);
-                            break;
-                        }
-                    }
-                }
+            const transitionOrders = await TRANSITIONORDERS.find({ end: name })
+            console.log(transitionOrders);
+            for (var transitionOrder of transitionOrders) {
+                const order = await ORDERS.findById(transitionOrder.order).select("orderCode status sender receiver logs");
+                if (order) sentOrders.push(order);
+                else throw new Error("order_find_failed");
             } res.status(200).json(sentOrders)
         } else throw Error("location_type_missing")
     } catch (err) {
@@ -265,36 +243,41 @@ export const getSentOrdersAtCurLocation = async (req: Request, res: Response) =>
 }
 
 export const getReceivedOrdersAtCurLocation = async (req: Request, res: Response) => {
-    const name = (req as CustomRequest).location;
+    var name = (req as CustomRequest).location;
     const locationType = (req as CustomRequest).locationType;
     const orderIDs: Types.ObjectId[] = []
     var receivedOrders = [];
+
     try {
         const curLocation = await getPointFromName(name, locationType);
+        if (locationType == "Điểm giao dịch") name = "delivery " + name;
+        else if (locationType == "Điểm tập kết") name = "gathering " + name;
         if (curLocation) {
-            for (var id of curLocation.orders) {
-                orderIDs.push(id);
+            const transitionOrders = await TRANSITIONORDERS.find({ end: name })
+            console.log(transitionOrders);
+            for (var transitionOrder of transitionOrders) {
+                const order = await ORDERS.findById(transitionOrder.order).select("orderCode status sender receiver logs");
+                if (order) receivedOrders.push(order);
+                else throw new Error("order_find_failed");
             }
+            // for (var id of curLocation.orders) {
+            //     orderIDs.push(id);
+            // }
 
-            for (var id of orderIDs) {
-                const order = await ORDERS.findById(id).select("orderCode status sender receiver logs")
-                if (order) {
-                    const transitionOrders = await TRANSITIONORDERS.find({order: order._id})
-                    console.log(transitionOrders);
-                    for (var transitionOrder of transitionOrders) {
-                        if (transitionOrder.end.substring(transitionOrder.end.indexOf(' ') + 1) == curLocation.name) {
-                            console.log("matched")
-                            receivedOrders.push(order);;
-                            break;
-                        }
-                        //  else {
-                        //     console.log(transitionOrder.end.substring(transitionOrder.end.indexOf(' ') + 1));
-                        //     console.log(curLocation.name)
-
-                        // }
-                    }
-                }
-            }
+            // for (var id of orderIDs) {
+            //     const order = await ORDERS.findById(id).select("orderCode status sender receiver logs")
+            //     if (order) {
+            //         const transitionOrders = await TRANSITIONORDERS.find({order: order._id})
+            //         console.log(transitionOrders);
+            //         for (var transitionOrder of transitionOrders) {
+            //             if (transitionOrder.end.substring(transitionOrder.end.indexOf(' ') + 1) == curLocation.name) {
+            //                 console.log("matched")
+            //                 receivedOrders.push(order);;
+            //                 break;
+            //             }
+            //         }
+            //     }
+            // }
             res.status(200).json(receivedOrders)
         } else throw Error("location_type_missing")
     } catch (err) {

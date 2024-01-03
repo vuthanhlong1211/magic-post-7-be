@@ -22,7 +22,7 @@ const getGatheringPoints = async (req: Request, res: Response) => {
 }
 
 const getGatheringPointsName = async (req: Request, res: Response) => {
-    const gatheringPoints = await GATHERINGPOINTS.find().select('name')
+    const gatheringPoints = (await GATHERINGPOINTS.find().select('name -_id')).map(point => point.name)
     return res.status(200).json(gatheringPoints);
 }
 
